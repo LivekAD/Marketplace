@@ -14,4 +14,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Marketplace.DAL\Marketplace.DAL.csproj" />
+    <ProjectReference Include="..\Marketplace.Service\Marketplace.Service.csproj" />
+  </ItemGroup>
+
 </Project>

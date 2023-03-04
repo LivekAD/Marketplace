@@ -1,13 +1,28 @@
+using Marketplace;
+using Marketplace.DAL;
 using Microsoft.EntityFrameworkCore;
 
+//Add JSON file with Data Base settings
+IConfigurationBuilder iBuilder = new ConfigurationBuilder();
+iBuilder.SetBasePath(Directory.GetCurrentDirectory());
+iBuilder.AddJsonFile("dbsettings.json");
+IConfigurationRoot _confString = iBuilder.Build();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(_confString.GetConnectionString("DefaultConnection")));
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+/*var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseSqlServer(connection));
+    options.UseSqlServer(connection));*/
+
+
+builder.Services.InitializeRepositories();
+builder.Services.InitializeServices();
 
 var app = builder.Build();
 

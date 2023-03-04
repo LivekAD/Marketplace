@@ -1,0 +1,165 @@
+﻿<div class="row">
+    <div class="col">
+        <select class="form-control" id="firstCarId"></select>
+    </div>
+    <div class="col">
+        <select class="form-control" id="secondCarId"></select>
+    </div>
+</div>
+
+<div style="padding: 10px;"></div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card-body">
+            <h5 class="card-title" id="firstCardTitleId"></h5>
+            <p class="card-text" id="firstCardDescId"></p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" id="firstCardPriceId"></li>
+            <li class="list-group-item" id="firstCardDateCreateId"></li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <div class="card-body">
+            <h5 class="card-title" id="secondCardTitleId"></h5>
+            <p class="card-text" id="secondCardDescId"></p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" id="secondCardPriceId"></li>
+            <li class="list-group-item" id="secondCardDateCreateId"></li>
+        </ul>
+    </div>
+</div>
+
+<div style="padding: 10px;"></div>
+
+<div class="text-white bg-secondary" id="warningCardId">
+    <div class="bg-secondary card-header text-white">
+        Предупреждение
+    </div>
+    <div class="card-body">
+        <blockquote class="blockquote mb-0">
+            <p id="warningId"></p>
+        </blockquote>
+    </div>
+</div>
+
+<div style="padding: 10px;"></div>
+
+<div id="resultCardId">
+    <div class="bg-secondary card-header text-white">
+        Результат
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item" id="resultSpeedId"></li>
+            <li class="list-group-item" id="resultPriceId"></li>
+        </ul>
+    </div>
+</div>
+
+<script src="~/lib/select2/js/select2.full.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#firstCardId').hide();
+        $('#secondCardId').hide();
+        $('#warningCardId').hide();
+        $('#resultCardId').hide();
+
+        let firstProduct = null;
+        let secondProduct = null;
+
+        $('#firstProductId, #secondProductId').select2({
+            placeholder: "Оберіть товар",
+            minimumInputLength: 2,
+            allowClear: true,
+            ajax: {
+                type: "POST",
+                url: "@Url.Action("GetProduct", "Product")",
+                dataType: "json",
+                data: function (params) {
+                    var query = {
+                        term: params.term,
+                        page: params.page || 1,
+                        pageSize: params.pageSize || 5
+                    };
+                    return query;
+                },
+                processResults: function (result) {
+                    return {
+                        results: $.map(result, function (val, index) {
+                            return {
+                                id: index,
+                                text: val
+                            };
+                        }),
+                    };
+                }
+            }
+        });
+
+        function fillData(val, cardId) {
+            if (cardId === 'firstProductdId') {
+                $('#firstCardId').show();
+                $('#firstCardTitleId')[0].innerText = 'Название: ' + val.name;
+                $('#firstCardDescId')[0].innerText = 'Описание: ' + val.description;
+                $('#firstCardPriceId')[0].innerText = 'Стоимость: ' + val.price + ' ₽';
+                $('#firstCardDateCreateId')[0].innerText = 'Дата создания: ' + val.dateCreate;
+            } else {
+                $('#secondProductId').show();
+                $('#secondCardTitleId')[0].innerText = 'Название: ' + val.name;
+                $('#secondCardDescId')[0].innerText = 'Описание: ' + val.description;
+                $('#secondCardPriceId')[0].innerText = 'Стоимость: ' + val.price + ' ₽';
+                $('#secondCardDateCreateId')[0].innerText = 'Дата создания: ' + val.dateCreate;
+            }
+            compareCars();
+        }
+
+
+        $("#secondProductId").on("change", function () {
+            const id = this.value;
+            if (id === "") return;
+            $.get("/Product/GetProduct", { id: id, isJson: true }, function (data) {
+                secondProduct = data;
+                fillData(secondProduct, "secondProductId");
+            });
+        });
+
+        $("#firstProductId").on("change", function () {
+            const id = this.value;
+            if (id === "") return;
+            $.get("/Product/GetProduct", { id: id, isJson: true }, function (data) {
+                firstProduct = data;
+                fillData(firstProduct, "firstCardId");
+            });
+        });
+
+        function compareProducts() {
+            if (firstProduct === null) {
+                $('#warningId')[0].innerText = 'Вы не выбрали первый автомобиль';
+                $('#warningProductdId').show();
+                return;
+            }
+
+            if (secondProduct === null) {
+                $('#warningId')[0].innerText = 'Вы не выбрали второй автомобиль';
+                $('#warningProductdId').show();
+                return;
+            }
+
+            var price = $('#resultPriceId')[0];
+            if (firstProduct.price > secondProduct.price) {
+                price.innerText = 'Стоимость ' + firstProduct.name + ' выше, чем у ' + secondProduct.name;
+            } else if (firstProduct.price === secondProduct.price) {
+                price.innerText = 'Стоимость ' + firstProduct.name + ' и ' + secondProduct.name + ' равны';
+            } else {
+                price.innerText = 'Стоимость ' + firstProduct.name + ' выше, чем у ' + secondProduct.name;
+            }
+
+            $('#resultCardId').show();
+            $('#warningCardId').hide();
+        }
+    });
+</script>
