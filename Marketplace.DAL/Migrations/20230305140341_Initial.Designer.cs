@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketplace.DAL.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230304090404_Initial")]
+    [Migration("20230305140341_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -132,11 +132,31 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 4, 11, 4, 4, 253, DateTimeKind.Local).AddTicks(6754),
+                            DateCreate = new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6103),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             Price = 0m,
                             SubCategory = 4314
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            Category = 31,
+                            DateCreate = new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6135),
+                            Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            Name = "Pods",
+                            Price = 0m,
+                            SubCategory = 4314
+                        },
+                        new
+                        {
+                            Id = 3L,
+                            Category = 31,
+                            DateCreate = new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6138),
+                            Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                            Name = "Air",
+                            Price = 0m,
+                            SubCategory = 4312
                         });
                 });
 

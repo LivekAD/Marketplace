@@ -18,6 +18,8 @@ namespace Marketplace.Service.Interfaces
 
         IBaseResponse<List<Product>> GetProducts();
 
+        IBaseResponse<List<Product>> Search(string searchString);
+
         Task<IBaseResponse<ProductViewModel>> GetProduct(long id);
 
         Task<BaseResponse<Dictionary<long, string>>> GetProduct(string term);

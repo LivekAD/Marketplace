@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="ViewModels\Order\" />
     <Folder Include="ViewModels\Profile\" />
   </ItemGroup>
 

@@ -115,7 +115,12 @@ namespace Marketplace.DAL.Migrations
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "Category", "DateCreate", "Description", "Name", "Photo", "Price", "SubCategory" },
-                values: new object[] { 1L, 31, new DateTime(2023, 3, 4, 11, 4, 4, 253, DateTimeKind.Local).AddTicks(6754), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Apple Air Pods", null, 0m, 4314 });
+                values: new object[,]
+                {
+                    { 1L, 31, new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6103), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Apple Air Pods", null, 0m, 4314 },
+                    { 2L, 31, new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6135), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Pods", null, 0m, 4314 },
+                    { 3L, 31, new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6138), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Air", null, 0m, 4312 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Users",

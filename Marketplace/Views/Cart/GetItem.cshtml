@@ -1,0 +1,22 @@
+﻿@model Marketplace.Domain.ViewModels.Order.OrderViewModel
+
+<div class="row">
+    <div class="col-md-12">
+        <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())"
+             class="img-fluid rounded-start rounded">
+    </div>
+    <div class="col-md-6">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Продукт: @Model.ProductName</li>
+            <li class="list-group-item">Категорія: @Model.Category</li>
+            <li class="list-group-item">Підкатегорія: @Model.SubCategory</li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">ПІБ: @Model.FirstName @Model.LastName.Substring(0, 1) @Model.MiddleName.Substring(0, 1)</li>
+            <li class="list-group-item">Адрес: @Model.Address</li>
+            <li class="list-group-item">Дата створення: @Model.DateCreate</li>
+        </ul>
+    </div>
+</div>

@@ -24,8 +24,8 @@ namespace Marketplace
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProfileService, ProfileService>();
-            /*services.AddScoped<IBasketService, BasketService>();
-            services.AddScoped<IOrderService, OrderService>();*/
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IOrderService, OrderService>();
         }
     }
 }

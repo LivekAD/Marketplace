@@ -1,4 +1,5 @@
-﻿using Marketplace.Domain.ViewModels.Product;
+﻿using Azure;
+using Marketplace.Domain.ViewModels.Product;
 using Marketplace.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -16,14 +17,24 @@ namespace Marketplace.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProducts()
+        public IActionResult GetProducts(string searchString)
         {
             var response = _productService.GetProducts();
+
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
-                return View(response.Data);
+                if (String.IsNullOrEmpty(searchString))
+                {
+                    return View(response.Data);
+                }
+                else
+                {
+                    return View(response.Data.Where(s => s.Name!.ToLower().Contains(searchString.ToLower())).ToList());
+                }
             }
+
             return View("Error", $"{response.Description}");
+
         }
 
         [Authorize(Roles = "Admin")]

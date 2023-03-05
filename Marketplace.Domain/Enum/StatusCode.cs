@@ -12,6 +12,7 @@ namespace Marketplace.Domain.Enum
         UserAlreadyExists = 1,
 
         ProductNotFound = 10,
+        OrderNotFound = 20,
 
         OK = 200,
         InternalServerError = 500

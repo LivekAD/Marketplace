@@ -276,5 +276,45 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        public IBaseResponse<List<Product>> Search(string searchString)
+        {
+            try
+            {
+                var products = from m in _productRepository.GetAll() select m;
+                products.Where(s => s.Name!.Contains(searchString));
+                if (!products.Any())
+                {
+                    return new BaseResponse<List<Product>>()
+                    {
+                        Description = "Знайдено 0 елементів",
+                        StatusCode = StatusCode.OK
+                    };
+                }
+
+                if (!String.IsNullOrEmpty(searchString))
+                {
+                    return new BaseResponse<List<Product>>()
+                    {
+                        Description = "Помилка вводу",
+                        StatusCode = StatusCode.OK
+                    };
+                }
+
+                return new BaseResponse<List<Product>>()
+                {
+                    Data = products.ToList(),
+                    StatusCode = StatusCode.OK
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<List<Product>>()
+                {
+                    Description = $"[GetProducts] : {ex.Message}",
+                    StatusCode = StatusCode.InternalServerError
+                };
+            }
+        }
     }
 }

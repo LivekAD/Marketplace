@@ -77,7 +77,28 @@ namespace Marketplace.DAL
                     Photo = null,
                     Category = Category.Electronics,
                     SubCategory = SubCategory.Audio_Equipment,
-                });
+                },
+                new Product
+                {
+                    Id = 2,
+                    Name = "Pods",
+                    Description = new string('A', 50),
+                    DateCreate = DateTime.Now,
+                    Photo = null,
+                    Category = Category.Electronics,
+                    SubCategory = SubCategory.Audio_Equipment,
+                },
+                new Product
+                {
+                    Id = 3,
+                    Name = "Air",
+                    Description = new string('A', 50),
+                    DateCreate = DateTime.Now,
+                    Photo = null,
+                    Category = Category.Electronics,
+                    SubCategory = SubCategory.Computers,
+                }
+                );
             });
 
             modelBuilder.Entity<Profile>(builder =>
