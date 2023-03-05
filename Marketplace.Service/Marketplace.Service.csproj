@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Marketplace.DAL\Marketplace.DAL.csproj" />
     <ProjectReference Include="..\Marketplace.Domain\Marketplace.Domain.csproj" />
   </ItemGroup>

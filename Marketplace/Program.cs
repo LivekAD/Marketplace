@@ -1,5 +1,6 @@
 using Marketplace;
 using Marketplace.DAL;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 //Add JSON file with Data Base settings
@@ -21,6 +22,13 @@ builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(connection));*/
 
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+        options.AccessDeniedPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+    });
+
 builder.Services.InitializeRepositories();
 builder.Services.InitializeServices();
 
@@ -39,6 +47,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

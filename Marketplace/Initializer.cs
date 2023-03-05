@@ -21,10 +21,10 @@ namespace Marketplace
         public static void InitializeServices(this IServiceCollection services)
         {
             services.AddScoped<IProductService, ProductService>();
-            /*services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IProfileService, ProfileService>();
-            services.AddScoped<IBasketService, BasketService>();
+            /*services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IOrderService, OrderService>();*/
         }
     }
