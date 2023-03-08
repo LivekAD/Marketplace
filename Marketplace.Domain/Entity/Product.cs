@@ -23,6 +23,8 @@ namespace Marketplace.Domain.Entity
 
         public SubCategory SubCategory { get; set; }
 
+        public string? OwnerName { get; set; }
+
         public byte[]? Photo { get; set; }
     }
 }

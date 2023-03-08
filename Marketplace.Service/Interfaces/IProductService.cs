@@ -1,6 +1,7 @@
 ﻿using Marketplace.Domain.Entity;
 using Marketplace.Domain.Response;
 using Marketplace.Domain.ViewModels.Product;
+using Marketplace.Domain.ViewModels.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,9 @@ namespace Marketplace.Service.Interfaces
 
         Task<BaseResponse<Dictionary<long, string>>> GetProduct(string term);
 
-        Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData);
+        Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData, string ownerName);
 
-        Task<IBaseResponse<bool>> DeleteProduct(long id);
+        Task<IBaseResponse<bool>> DeleteProduct(long id, string ownerName);
 
         Task<IBaseResponse<Product>> Edit(long id, ProductViewModel model);
     }

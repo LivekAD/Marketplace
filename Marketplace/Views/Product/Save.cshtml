@@ -1,6 +1,7 @@
-﻿@model ProductViewModel
+﻿@using Marketplace.Domain.Enum;
+@model ProductViewModel
 @{
-    var textTitle = Model?.Id == 0 ? "Изменение данных" : "Добавление данных";
+    Layout = "_Layout";
 }
 
 <form asp-action="Save" enctype="multipart/form-data" id="formSaveProduct">
@@ -24,12 +25,18 @@
     </div>
     <div class="row">
         <div class="form-group col-md-6">
-            <label asp-for="@Model.Category" class="col-form-label"></label>
-            <select asp-for="@Model.Category" class="form-control" id="productCategoryId"></select>
+            <label asp-for="@Model.Category" class="control-label"></label>
+            <select asp-for="@Model.Category" class="form-control" asp-items="Html.GetEnumSelectList<Category>()">
+                <option value="">Please choose your product</option>
+            </select>
+            <span asp-validation-for="@Model.Category" class="text-danger"></span>
         </div>
         <div class="form-group col-md-6">
-            <label asp-for="@Model.SubCategory" class="col-form-label"></label>
-            <select asp-for="@Model.SubCategory" class="form-control" id="productSubCategoryId"></select>
+            <label asp-for="@Model.SubCategory" class="control-label"></label>
+            <select asp-for="@Model.SubCategory" class="form-control" asp-items="Html.GetEnumSelectList<SubCategory>()">
+                <option value="">Please choose your product</option>
+            </select>
+            <span asp-validation-for="@Model.SubCategory" class="text-danger"></span>
         </div>
         <div class="form-group col-md-6">
             <label class="col-form-label">Изображение</label>
@@ -39,7 +46,7 @@
     <button class="btn btn-primary">Отправить</button>
 </form>
 
-<script src="~/lib/select2/js/select2.full.min.js"></script>
+@*<script src="~/lib/select2/js/select2.full.min.js"></script>
 <script>
     $('#productCategoryId').select2({
         placeholder: "Выберите тип",
@@ -60,28 +67,8 @@
                 };
             }
         }
-    });
-    $('#productSubCategoryId').select2({
-        placeholder: "Выберите тип",
-        minimumInputLength: 0,
-        allowClear: true,
-        ajax: {
-            type: "POST",
-            url: "@Url.Action("GetSubCategory", "Product")",
-            dataType: "json",
-            processResults: function (result) {
-                return {
-                    results: $.map(result, function (val, index) {
-                        return {
-                            id: index,
-                            text: val
-                        };
-                    }),
-                };
-            }
-        }
-    });
-</script>
+    });   
+</script>*@
 
 <style>
     label {

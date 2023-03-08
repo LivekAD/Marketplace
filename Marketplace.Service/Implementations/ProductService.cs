@@ -12,19 +12,22 @@ using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Marketplace.Domain.ViewModels.User;
 
 namespace Marketplace.Service.Implementations
 {
     public class ProductService : IProductService
     {
         private readonly IBaseRepository<Product> _productRepository;
+        private readonly IBaseRepository<User> _userRepository;
 
-        public ProductService(IBaseRepository<Product> productRepository)
+        public ProductService(IBaseRepository<Product> productRepository, IBaseRepository<User> userRepository)
         {
             _productRepository = productRepository;
+            _userRepository = userRepository;
         }
 
-        public async Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData)
+        public async Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData, string ownerName)
         {
             try
             {
@@ -36,7 +39,8 @@ namespace Marketplace.Service.Implementations
                     Category = (Category)Convert.ToInt32(model.Category),
                     SubCategory = (SubCategory)Convert.ToInt32(model.SubCategory),
                     Price = model.Price,
-                    Photo = imageData
+                    Photo = imageData,
+                    OwnerName = ownerName
                 };
                 await _productRepository.Create(product);
 
@@ -56,7 +60,7 @@ namespace Marketplace.Service.Implementations
             }
         }
 
-        public async Task<IBaseResponse<bool>> DeleteProduct(long id)
+        public async Task<IBaseResponse<bool>> DeleteProduct(long id, string ownerName)
         {
             try
             {
@@ -71,7 +75,10 @@ namespace Marketplace.Service.Implementations
                     };
                 }
 
-                await _productRepository.Delete(product);
+                if(product.OwnerName == ownerName)
+                {
+                    await _productRepository.Delete(product);
+                }                
 
                 return new BaseResponse<bool>()
                 {

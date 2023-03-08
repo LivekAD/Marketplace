@@ -1,4 +1,5 @@
 ﻿using Marketplace.DAL.Interfaces;
+using Marketplace.DAL.Repositories;
 using Marketplace.Domain.Entity;
 using Marketplace.Domain.Enum;
 using Marketplace.Domain.Extensions;
@@ -131,7 +132,7 @@ namespace Marketplace.Service.Implementations
                     Description = $"Внутренняя ошибка: {ex.Message}"
                 };
             }
-        }
+        }       
 
         public async Task<IBaseResponse<bool>> DeleteUser(long id)
         {

@@ -25,6 +25,7 @@ namespace Marketplace.DAL.Migrations
                     DateCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Category = table.Column<int>(type: "int", nullable: false),
                     SubCategory = table.Column<int>(type: "int", nullable: false),
+                    OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
@@ -114,12 +115,12 @@ namespace Marketplace.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "Category", "DateCreate", "Description", "Name", "Photo", "Price", "SubCategory" },
+                columns: new[] { "Id", "Category", "DateCreate", "Description", "Name", "OwnerName", "Photo", "Price", "SubCategory" },
                 values: new object[,]
                 {
-                    { 1L, 31, new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6103), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Apple Air Pods", null, 0m, 4314 },
-                    { 2L, 31, new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6135), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Pods", null, 0m, 4314 },
-                    { 3L, 31, new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6138), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Air", null, 0m, 4312 }
+                    { 1L, 31, new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5914), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Apple Air Pods", "Admin", null, 0m, 4314 },
+                    { 2L, 31, new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5945), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Pods", "Admin", null, 0m, 4314 },
+                    { 3L, 31, new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5947), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Air", "Admin", null, 0m, 4312 }
                 });
 
             migrationBuilder.InsertData(

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketplace.DAL.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230305140341_Initial")]
+    [Migration("20230307185124_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -114,6 +114,9 @@ namespace Marketplace.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OwnerName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<byte[]>("Photo")
                         .HasColumnType("varbinary(max)");
 
@@ -132,9 +135,10 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6103),
+                            DateCreate = new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5914),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
+                            OwnerName = "Admin",
                             Price = 0m,
                             SubCategory = 4314
                         },
@@ -142,9 +146,10 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6135),
+                            DateCreate = new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5945),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
+                            OwnerName = "Admin",
                             Price = 0m,
                             SubCategory = 4314
                         },
@@ -152,9 +157,10 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 5, 16, 3, 40, 998, DateTimeKind.Local).AddTicks(6138),
+                            DateCreate = new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5947),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
+                            OwnerName = "Admin",
                             Price = 0m,
                             SubCategory = 4312
                         });

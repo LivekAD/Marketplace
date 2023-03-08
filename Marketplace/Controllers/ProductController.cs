@@ -1,19 +1,23 @@
 ﻿using Azure;
 using Marketplace.Domain.ViewModels.Product;
+using Marketplace.Service.Implementations;
 using Marketplace.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Marketplace.Controllers
 {
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly IUserService _userService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IUserService userService)
         {
             _productService = productService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -37,10 +41,10 @@ namespace Marketplace.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            var response = await _productService.DeleteProduct(id);
+            var response = await _productService.DeleteProduct(id, User.Identity.Name);
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 return RedirectToAction("GetProducts");
@@ -79,11 +83,11 @@ namespace Marketplace.Controllers
                     {
                         imageData = binaryReader.ReadBytes((int)viewModel.Photo.Length);
                     }
-                    await _productService.Create(viewModel, imageData);
+                    await _productService.Create(viewModel, imageData, User.Identity.Name);
                 }
                 else
                 {
-                    await _productService.Edit(viewModel.Id, viewModel);
+                    await _productService.Edit(viewModel.Id, viewModel);                    
                 }
             }
             return RedirectToAction("GetProducts");
@@ -108,7 +112,7 @@ namespace Marketplace.Controllers
             return Json(response.Data);
         }
 
-        [HttpPost]
+        [HttpGet]
         public JsonResult GetCategory()
         {
             var types = _productService.GetCategory();

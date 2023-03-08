@@ -31,9 +31,9 @@
 <div class="card col-md-12" style="margin: 10px;">
     <div class="card-buttons-group">
         <button class='btn btn-primary' id='compareBtnId'>Сравнение</button>
-        @if (User.IsInRole("Admin"))
-        {
-            <button class='btn btn-success' id='addProductId'>Добавить</button>
+        @if (User.Identity.IsAuthenticated)
+        {            
+            <a asp-controller="Product" asp-action="Save" class="btn btn-danger">Добавить</a>
         }
     </div>
 </div>
@@ -87,20 +87,17 @@ else
             <div class="row row-cols-1 @cardStyle text-center">
                 <div class="col" style="padding: 10px;">
                     <div class="card">
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" />
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;"/>
                         <div class="card-body">
                             <h5 class="card-title">Название: @product.Name</h5>
-                            <p class="card-text">Краткое описание: @product.Description.Substring(0, 40) ...</p>
+                            <p class="card-text">Краткое описание: @product.Description.Substring(0, 10) ...</p>
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Стоимость: @product.Price </li>
                         </ul>
                         <div class="card-body">
-                            <button class="btn btn-primary" onclick="openModal({ url: '/Product/GetProduct', data: '@product.Id' })"
-                                    data-toggle="ajax-modal" data-target="Modal">
-                                Открыть
-                            </button>
-                            @if (User.IsInRole("Admin"))
+                            <a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-danger">Открыть</a>
+                            @if (User.Identity.IsAuthenticated)
                             {
                                 <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger">Удалить</a>
                             }

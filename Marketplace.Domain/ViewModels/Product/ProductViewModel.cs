@@ -19,7 +19,7 @@ namespace Marketplace.Domain.ViewModels.Product
         public string Name { get; set; }
 
         [Display(Name = "Опис")]
-        [MinLength(50, ErrorMessage = "Мінімальна довжина повинна бути більше 50 символів")]
+        [MinLength(16, ErrorMessage = "Мінімальна довжина повинна бути більше 50 символів")]
         public string Description { get; set; }
 
         [Display(Name = "Ціна")]
@@ -35,6 +35,8 @@ namespace Marketplace.Domain.ViewModels.Product
         [Display(Name = "Підкатегорія")]
         [Required(ErrorMessage = "Оберіть підкатегорію")]
         public string SubCategory { get; set; }
+
+        public string? OwnerName { get; set; }
 
         public IFormFile Photo { get; set; }
 

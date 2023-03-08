@@ -77,6 +77,7 @@ namespace Marketplace.DAL
                     Photo = null,
                     Category = Category.Electronics,
                     SubCategory = SubCategory.Audio_Equipment,
+                    OwnerName = "Admin"
                 },
                 new Product
                 {
@@ -87,6 +88,7 @@ namespace Marketplace.DAL
                     Photo = null,
                     Category = Category.Electronics,
                     SubCategory = SubCategory.Audio_Equipment,
+                    OwnerName = "Admin"
                 },
                 new Product
                 {
@@ -97,6 +99,7 @@ namespace Marketplace.DAL
                     Photo = null,
                     Category = Category.Electronics,
                     SubCategory = SubCategory.Computers,
+                    OwnerName = "Admin"
                 }
                 );
             });

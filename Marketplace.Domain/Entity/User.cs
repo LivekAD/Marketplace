@@ -21,5 +21,6 @@ namespace Marketplace.Domain.Entity
         public Profile Profile { get; set; }
 
         public Cart Cart { get; set; }
+
     }
 }

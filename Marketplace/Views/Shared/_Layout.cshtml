@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     <link href="https://raw.githack.com/ttskch/select2-bootstrap4-theme/master/dist/select2-bootstrap4.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/backImage.css" />
     <link rel="stylesheet" href="~/css/menu.css" />
     <link rel="stylesheet" href="~/css/paragraph.css" />
     <link rel="stylesheet" href="~/css/card.css" />
     <link rel="stylesheet" href="~/css/label.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body class="backgroundImage">
     <header>
@@ -28,31 +28,18 @@
                 <ul class="navbar-nav mr-auto">
                     @if (!User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle paragraphLayout active text-black" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-family:'Comic Sans MS'; font-weight: bold;">
-                                Аккаунт
-                            </a>
-                            <div class="" aria-labelledby="navbarDropdown">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <ul class="nav flex-column paragraphHome">
-                                                <li class="nav-item text-center">
-                                                    <a class="nav-link active text-black" asp-controller="Account" asp-action="Register">
-                                                        Регистрация
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link active text-black" asp-controller="Account" asp-action="Login">
-                                                        Вход
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
+                        <ul class="nav flex-column paragraphHome">
+                            <li class="nav-item text-center">
+                                <a class="nav-link active text-black" asp-controller="Account" asp-action="Register">
+                                    Регистрация
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active text-black" asp-controller="Account" asp-action="Login">
+                                    Вход
+                                </a>
+                            </li>
+                        </ul>
                     }
                     @if (User.Identity.IsAuthenticated)
                     {
