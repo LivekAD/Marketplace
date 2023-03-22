@@ -26,5 +26,11 @@ namespace Marketplace.Domain.Entity
         public string? OwnerName { get; set; }
 
         public byte[]? Photo { get; set; }
+
+        public string? isAuction { get; set; }
+
+        public DateTime? EndingAuction { get; set; }
+
+        public virtual List<Bid> Bids { get; set; }
     }
 }

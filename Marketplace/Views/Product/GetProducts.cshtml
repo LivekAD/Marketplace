@@ -30,10 +30,11 @@
 
 <div class="card col-md-12" style="margin: 10px;">
     <div class="card-buttons-group">
-        <button class='btn btn-primary' id='compareBtnId'>Сравнение</button>
+        @*<button class='btn btn-primary' id='compareBtnId'>Сравнение</button>*@
         @if (User.Identity.IsAuthenticated)
         {            
             <a asp-controller="Product" asp-action="Save" class="btn btn-danger">Добавить</a>
+            <a asp-controller="Product" asp-action="SaveAuction" class="btn btn-danger">Добавить Auction</a>
         }
     </div>
 </div>
@@ -90,18 +91,25 @@ else
                         <img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;"/>
                         <div class="card-body">
                             <h5 class="card-title">Название: @product.Name</h5>
-                            <p class="card-text">Краткое описание: @product.Description.Substring(0, 10) ...</p>
+                            <p class="card-text">Краткое описание: @product.Description.Substring(0, 16) ...</p>
                         </div>
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">Стоимость: @product.Price </li>
                         </ul>
                         <div class="card-body">
-                            <a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-danger">Открыть</a>
+                            @if(product.isAuction == "true")
+                            {
+                                <a asp-controller="Product" asp-action="GetAuctionProduct" asp-route-id="@product.Id" class="btn btn-danger">Открыть</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-danger">Открыть</a>
+                            }                            
                             @if (User.Identity.IsAuthenticated)
                             {
                                 <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger">Удалить</a>
-                            }
-                            <a asp-controller="Order" asp-action="CreateOrder" asp-route-id="@product.Id" class="btn btn-success">В корзину</a>
+                                <a asp-controller="Order" asp-action="CreateOrder" asp-route-id="@product.Id" class="btn btn-success">В корзину</a>
+                            }                            
                         </div>
                     </div>
                 </div>

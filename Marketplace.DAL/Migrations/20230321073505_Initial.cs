@@ -26,7 +26,9 @@ namespace Marketplace.DAL.Migrations
                     Category = table.Column<int>(type: "int", nullable: false),
                     SubCategory = table.Column<int>(type: "int", nullable: false),
                     OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    isAuction = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndingAuction = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,6 +48,35 @@ namespace Marketplace.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Bids",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BidAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId1 = table.Column<long>(type: "bigint", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bids", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bids_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Bids_Users_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,12 +146,12 @@ namespace Marketplace.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "Category", "DateCreate", "Description", "Name", "OwnerName", "Photo", "Price", "SubCategory" },
+                columns: new[] { "Id", "Category", "DateCreate", "Description", "EndingAuction", "Name", "OwnerName", "Photo", "Price", "SubCategory", "isAuction" },
                 values: new object[,]
                 {
-                    { 1L, 31, new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5914), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Apple Air Pods", "Admin", null, 0m, 4314 },
-                    { 2L, 31, new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5945), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Pods", "Admin", null, 0m, 4314 },
-                    { 3L, 31, new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5947), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", "Air", "Admin", null, 0m, 4312 }
+                    { 1L, 31, new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7756), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
+                    { 2L, 31, new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7795), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
+                    { 3L, 31, new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7798), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
                 });
 
             migrationBuilder.InsertData(
@@ -141,6 +172,16 @@ namespace Marketplace.DAL.Migrations
                 table: "Profiles",
                 columns: new[] { "Id", "Address", "Age", "UserId" },
                 values: new object[] { 1L, null, (byte)0, 1L });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bids_ProductId",
+                table: "Bids",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bids_UserId1",
+                table: "Bids",
+                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Carts_UserId",
@@ -164,13 +205,16 @@ namespace Marketplace.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Bids");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Profiles");
 
             migrationBuilder.DropTable(
-                name: "Profiles");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Carts");

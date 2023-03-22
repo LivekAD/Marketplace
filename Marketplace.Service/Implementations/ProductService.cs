@@ -40,7 +40,9 @@ namespace Marketplace.Service.Implementations
                     SubCategory = (SubCategory)Convert.ToInt32(model.SubCategory),
                     Price = model.Price,
                     Photo = imageData,
-                    OwnerName = ownerName
+                    OwnerName = ownerName,
+                    isAuction = model.isAuction,
+                    EndingAuction = model.EndingAuction,
                 };
                 await _productRepository.Create(product);
 

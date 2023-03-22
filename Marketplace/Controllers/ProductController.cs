@@ -93,6 +93,37 @@ namespace Marketplace.Controllers
             return RedirectToAction("GetProducts");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> SaveAuction()
+        {
+            return PartialView();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAuction(ProductViewModel viewModel)
+        {
+            ModelState.Remove("Id");
+            ModelState.Remove("DateCreate");
+            if (ModelState.IsValid)
+            {
+                if (viewModel.Id == 0)
+                {
+                    byte[] imageData;
+                    using (var binaryReader = new BinaryReader(viewModel.Photo.OpenReadStream()))
+                    {
+                        imageData = binaryReader.ReadBytes((int)viewModel.Photo.Length);
+                    }
+                    viewModel.isAuction = "true";
+                    await _productService.Create(viewModel, imageData, User.Identity.Name);
+                }
+                else
+                {
+                    await _productService.Edit(viewModel.Id, viewModel);
+                }
+            }
+            return RedirectToAction("GetProducts");
+        }
+
 
         [HttpGet]
         public async Task<ActionResult> GetProduct(int id, bool isJson)
@@ -107,6 +138,24 @@ namespace Marketplace.Controllers
 
         [HttpPost]
         public async Task<IActionResult> GetProduct(string term)
+        {
+            var response = await _productService.GetProduct(term);
+            return Json(response.Data);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAuctionProduct(int id, bool isJson)
+        {
+            var response = await _productService.GetProduct(id);
+            if (isJson)
+            {
+                return Json(response.Data);
+            }
+            return PartialView("GetProduct", response.Data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetAuctionProduct(string term)
         {
             var response = await _productService.GetProduct(term);
             return Json(response.Data);

@@ -22,6 +22,39 @@ namespace Marketplace.DAL.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Marketplace.Domain.Entity.Bid", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("UserId1")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId1");
+
+                    b.ToTable("Bids");
+                });
+
             modelBuilder.Entity("Marketplace.Domain.Entity.Cart", b =>
                 {
                     b.Property<long>("Id")
@@ -107,6 +140,9 @@ namespace Marketplace.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("EndingAuction")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -123,6 +159,9 @@ namespace Marketplace.DAL.Migrations
                     b.Property<int>("SubCategory")
                         .HasColumnType("int");
 
+                    b.Property<string>("isAuction")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Products", (string)null);
@@ -132,7 +171,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5914),
+                            DateCreate = new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7756),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             OwnerName = "Admin",
@@ -143,7 +182,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5945),
+                            DateCreate = new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7795),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
                             OwnerName = "Admin",
@@ -154,7 +193,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 7, 20, 51, 24, 122, DateTimeKind.Local).AddTicks(5947),
+                            DateCreate = new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7798),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
                             OwnerName = "Admin",
@@ -238,6 +277,25 @@ namespace Marketplace.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Marketplace.Domain.Entity.Bid", b =>
+                {
+                    b.HasOne("Marketplace.Domain.Entity.Product", "Product")
+                        .WithMany("Bids")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Marketplace.Domain.Entity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Marketplace.Domain.Entity.Cart", b =>
                 {
                     b.HasOne("Marketplace.Domain.Entity.User", "User")
@@ -274,6 +332,11 @@ namespace Marketplace.DAL.Migrations
             modelBuilder.Entity("Marketplace.Domain.Entity.Cart", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Marketplace.Domain.Entity.Product", b =>
+                {
+                    b.Navigation("Bids");
                 });
 
             modelBuilder.Entity("Marketplace.Domain.Entity.User", b =>
