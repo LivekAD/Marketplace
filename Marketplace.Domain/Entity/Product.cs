@@ -31,6 +31,7 @@ namespace Marketplace.Domain.Entity
 
         public DateTime? EndingAuction { get; set; }
 
-        public virtual List<Bid> Bids { get; set; }
+        public virtual List<Bid>? Bids { get; set; }
+
     }
 }

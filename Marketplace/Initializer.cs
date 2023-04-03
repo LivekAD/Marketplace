@@ -16,6 +16,7 @@ namespace Marketplace
             services.AddScoped<IBaseRepository<Profile>, ProfileRepository>();
             services.AddScoped<IBaseRepository<Cart>, CartRepository>();
             services.AddScoped<IBaseRepository<Order>, OrderRepository>();
+            services.AddScoped<IBaseRepository<Bid>, BidRepository>();
         }
 
         public static void InitializeServices(this IServiceCollection services)

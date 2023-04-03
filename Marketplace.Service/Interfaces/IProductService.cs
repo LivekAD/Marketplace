@@ -1,5 +1,6 @@
 ﻿using Marketplace.Domain.Entity;
 using Marketplace.Domain.Response;
+using Marketplace.Domain.ViewModels.Account;
 using Marketplace.Domain.ViewModels.Product;
 using Marketplace.Domain.ViewModels.User;
 using System;
@@ -30,5 +31,7 @@ namespace Marketplace.Service.Interfaces
         Task<IBaseResponse<bool>> DeleteProduct(long id, string ownerName);
 
         Task<IBaseResponse<Product>> Edit(long id, ProductViewModel model);
+
+        Task<BaseResponse<bool>> AddBid(Bid bid, string BidNameUser);
     }
 }

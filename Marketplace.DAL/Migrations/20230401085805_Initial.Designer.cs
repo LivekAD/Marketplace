@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketplace.DAL.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230321073505_Initial")]
+    [Migration("20230401085805_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -27,33 +27,34 @@ namespace Marketplace.DAL.Migrations
 
             modelBuilder.Entity("Marketplace.Domain.Entity.Bid", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<decimal>("BidAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<long>("ProductId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("UserId")
+                    b.Property<long>("AuctionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal?>("BidAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("BidUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ProductName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("UserId1")
-                        .HasColumnType("bigint");
+                    b.Property<decimal>("lastBid")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Bids");
                 });
@@ -174,7 +175,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7756),
+                            DateCreate = new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7592),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             OwnerName = "Admin",
@@ -185,7 +186,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7795),
+                            DateCreate = new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7646),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
                             OwnerName = "Admin",
@@ -196,7 +197,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7798),
+                            DateCreate = new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7651),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
                             OwnerName = "Admin",
@@ -256,10 +257,15 @@ namespace Marketplace.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("ProductId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Users", (string)null);
 
@@ -282,21 +288,9 @@ namespace Marketplace.DAL.Migrations
 
             modelBuilder.Entity("Marketplace.Domain.Entity.Bid", b =>
                 {
-                    b.HasOne("Marketplace.Domain.Entity.Product", "Product")
+                    b.HasOne("Marketplace.Domain.Entity.Product", null)
                         .WithMany("Bids")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Marketplace.Domain.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
+                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("Marketplace.Domain.Entity.Cart", b =>
@@ -330,6 +324,15 @@ namespace Marketplace.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Marketplace.Domain.Entity.User", b =>
+                {
+                    b.HasOne("Marketplace.Domain.Entity.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Marketplace.Domain.Entity.Cart", b =>

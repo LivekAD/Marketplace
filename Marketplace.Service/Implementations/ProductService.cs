@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Marketplace.Domain.ViewModels.User;
+using Marketplace.Domain.Helpers;
 
 namespace Marketplace.Service.Implementations
 {
@@ -20,11 +21,52 @@ namespace Marketplace.Service.Implementations
     {
         private readonly IBaseRepository<Product> _productRepository;
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IBaseRepository<Bid> _bidRepository;
 
-        public ProductService(IBaseRepository<Product> productRepository, IBaseRepository<User> userRepository)
+        public ProductService(IBaseRepository<Product> productRepository, IBaseRepository<User> userRepository, IBaseRepository<Bid> bidRepository)
         {
             _productRepository = productRepository;
             _userRepository = userRepository;
+            _bidRepository = bidRepository;
+        }
+
+        public async Task<BaseResponse<bool>> AddBid(Bid bid, string BidNameUser)
+        {
+            try
+            {                
+                var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Name == bid.ProductName);
+                if(product == null || product.isAuction != "true")
+                {
+                    return new BaseResponse<bool>()
+                    {
+                        StatusCode = StatusCode.UserNotFound,
+                        Description = "Аукціон не знайдений"
+                    };
+                }
+
+                bid.AuctionId = product.Id;
+                bid.BidUserName = BidNameUser;
+                product.Price = product.Price + bid.lastBid;
+                bid.BidAmount = product.Price;
+                await _productRepository.Update(product);
+
+                await _bidRepository.Create(bid);
+                return new BaseResponse<bool>()
+                {
+                    Data = true,
+                    StatusCode = StatusCode.OK,
+                    Description = "Ставка прийнята"
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<bool>()
+                {
+                    Description = ex.Message,
+                    StatusCode = StatusCode.InternalServerError
+                };
+            }
         }
 
         public async Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData, string ownerName)

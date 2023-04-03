@@ -1,4 +1,6 @@
 ﻿using Azure;
+using Marketplace.Domain.Entity;
+using Marketplace.Domain.ViewModels.Account;
 using Marketplace.Domain.ViewModels.Product;
 using Marketplace.Service.Implementations;
 using Marketplace.Service.Interfaces;
@@ -151,7 +153,7 @@ namespace Marketplace.Controllers
             {
                 return Json(response.Data);
             }
-            return PartialView("GetProduct", response.Data);
+            return PartialView("GetAuctionProduct", response.Data);
         }
 
         [HttpPost]
@@ -173,6 +175,23 @@ namespace Marketplace.Controllers
         {
             var types = _productService.GetSubCategory();
             return Json(types.Data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddBid(Bid bid)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var response = await _productService.AddBid(bid, User.Identity.Name);
+                if (response.StatusCode == Domain.Enum.StatusCode.OK)
+                {
+                    return Json(new { description = response.Description });
+                }
+            }
+            var modelError = ModelState.Values.SelectMany(v => v.Errors);
+
+            return StatusCode(StatusCodes.Status500InternalServerError, new { modelError.FirstOrDefault().ErrorMessage });
         }
     }
 }

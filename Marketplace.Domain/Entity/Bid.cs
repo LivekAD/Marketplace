@@ -8,16 +8,17 @@ namespace Marketplace.Domain.Entity
 {
     public class Bid
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
-        public decimal BidAmount { get; set; }
+        public long AuctionId { get; set; }
 
-        public Product Product { get; set; }
+        public decimal lastBid { get; set; }
 
-        public string UserId { get; set; }
+        public string ProductName { get; set; }
 
-        public User User { get; set; }
+        public string? BidUserName { get; set; }
 
-        public DateTime Timestamp { get; set; }
+        public decimal? BidAmount { get; set; }
+
     }
 }

@@ -36,31 +36,17 @@ namespace Marketplace.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "Bids",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Bids",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    BidAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ProductId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId1 = table.Column<long>(type: "bigint", nullable: false),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    AuctionId = table.Column<long>(type: "bigint", nullable: false),
+                    lastBid = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BidUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BidAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    ProductId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,14 +55,28 @@ namespace Marketplace.DAL.Migrations
                         name: "FK_Bids_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Role = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Bids_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Users_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -149,18 +149,18 @@ namespace Marketplace.DAL.Migrations
                 columns: new[] { "Id", "Category", "DateCreate", "Description", "EndingAuction", "Name", "OwnerName", "Photo", "Price", "SubCategory", "isAuction" },
                 values: new object[,]
                 {
-                    { 1L, 31, new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7756), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
-                    { 2L, 31, new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7795), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
-                    { 3L, 31, new DateTime(2023, 3, 21, 9, 35, 2, 839, DateTimeKind.Local).AddTicks(7798), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
+                    { 1L, 31, new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7592), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
+                    { 2L, 31, new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7646), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
+                    { 3L, 31, new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7651), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Name", "Password", "Role" },
+                columns: new[] { "Id", "Name", "Password", "ProductId", "Role" },
                 values: new object[,]
                 {
-                    { 1L, "Admin", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", 2 },
-                    { 2L, "Moderator", "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5", 1 }
+                    { 1L, "Admin", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", null, 2 },
+                    { 2L, "Moderator", "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5", null, 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -179,11 +179,6 @@ namespace Marketplace.DAL.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bids_UserId1",
-                table: "Bids",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Carts_UserId",
                 table: "Carts",
                 column: "UserId",
@@ -199,6 +194,11 @@ namespace Marketplace.DAL.Migrations
                 table: "Profiles",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ProductId",
+                table: "Users",
+                column: "ProductId");
         }
 
         /// <inheritdoc />
@@ -214,13 +214,13 @@ namespace Marketplace.DAL.Migrations
                 name: "Profiles");
 
             migrationBuilder.DropTable(
-                name: "Products");
-
-            migrationBuilder.DropTable(
                 name: "Carts");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Products");
         }
     }
 }

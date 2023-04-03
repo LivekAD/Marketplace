@@ -4,7 +4,7 @@
     Layout = "_Layout";
 }
 
-<form>
+<form id="BidForm">
     <div class="row">
         <div class="col-md-12">
             <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model?.Image ?? Array.Empty<byte>())"
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="form-group col-md-4">
             <label asp-for="@Model.Name" class="col-form-label"></label>
-            <input type="text" class="form-control" asp-for="@Model.Name">
+            <input type="text" class="form-control" asp-for="@Model.Name" name="ProductName">
         </div>
         <div class="form-group col-md-4">
             <label asp-for="@Model.Price" class="col-form-label"></label>
@@ -36,10 +36,57 @@
         </div>
         <div class="form-group col-md-6 text-white">
             <p>@Model.DateCreate</p>
+            <p>@Model.EndingAuction</p>
         </div>
     </div>
-    <button class="btn">Bid now</button>
+
+    <div class="mb-3">
+        <label class="form-label text-black-50">Ставка</label>
+        <input name="lastBid" class="form-control textbox-dg font-weight-bold text-center" type="number">
+    </div>
+    <div class="card-buttons-group">
+        <button class='btn btn-primary' id='btnBid'>Bid Now</button>
+    </div>
+
 </form>
+
+@section pageScripts
+{
+
+    <script>
+
+        $('#btnBid').on('click', function (e) {
+            e.preventDefault();
+
+            $('@Model.Name').removeAttr('disabled')
+            const data = $('#BidForm').serialize()
+            $('@Model.Name').attr('disabled', 'disabled')
+
+            $.ajax({
+                url: '@Url.Action("AddBid", "Product")',
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Информация',
+                        text: response.description,
+                        icon: 'success',
+                        confirmButtonText: 'Окей'
+                    })
+                },
+                error: function (response) {
+                    Swal.fire({
+                        title: 'Информация',
+                        text: response.responseJSON.errorMessage,
+                        icon: 'error',
+                        confirmButtonText: 'Окей'
+                    })
+                }
+            });
+        });
+    </script>
+
+}
 
 <style>
     label {
