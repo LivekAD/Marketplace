@@ -13,15 +13,15 @@ namespace Marketplace.Domain.ViewModels.User
         [Display(Name = "Id")]
         public long Id { get; set; }
 
-        [Required(ErrorMessage = "Укажите роль")]
+        [Required(ErrorMessage = "Вкажіть роль")]
         [Display(Name = "Роль")]
         public string Role { get; set; }
 
-        [Required(ErrorMessage = "Укажите логин")]
-        [Display(Name = "Логин")]
+        [Required(ErrorMessage = "Вкажіть логин")]
+        [Display(Name = "Логін")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Укажите пароль")]
+        [Required(ErrorMessage = "Вкажіть пароль")]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
     }

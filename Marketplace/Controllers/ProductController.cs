@@ -1,26 +1,35 @@
 ﻿using Azure;
 using Marketplace.Domain.Entity;
 using Marketplace.Domain.ViewModels.Account;
+using Marketplace.Domain.ViewModels.Chat;
 using Marketplace.Domain.ViewModels.Product;
 using Marketplace.Service.Implementations;
 using Marketplace.Service.Interfaces;
+using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Marketplace.Controllers
 {
     public class ProductController : Controller
     {
+        #region Include Data Base Service
+
         private readonly IProductService _productService;
         private readonly IUserService _userService;
+        private readonly IChatMessageService _chatMessageService;
 
-        public ProductController(IProductService productService, IUserService userService)
+        public ProductController(IProductService productService, IUserService userService, IChatMessageService chatMessageService)
         {
             _productService = productService;
             _userService = userService;
+            _chatMessageService = chatMessageService;
         }
+
+        #endregion
 
         [HttpGet]
         public IActionResult GetProducts(string searchString)
@@ -131,6 +140,18 @@ namespace Marketplace.Controllers
         public async Task<ActionResult> GetProduct(int id, bool isJson)
         {
             var response = await _productService.GetProduct(id);
+/*            var user1 = await _userService.GetUser(User.Identity.Name);
+            var user2 = await _userService.GetUser(response.Data.OwnerName);*/
+            var messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
+
+            if (messages.Data == null)
+            {
+                await _chatMessageService.GetOrCreateChat(id.ToString(), User.Identity.Name, response.Data.OwnerName, null);
+                messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
+            }
+
+            response.Data.ChatMessages = messages.Data;
+
             if (isJson)
             {
                 return Json(response.Data);
@@ -193,5 +214,26 @@ namespace Marketplace.Controllers
 
             return StatusCode(StatusCodes.Status500InternalServerError, new { modelError.FirstOrDefault().ErrorMessage });
         }
+
+        /*[HttpPost]
+        public async Task<IActionResult> Chat(int id)
+        {
+            var response = await _productService.GetProduct(id);
+            var user1 = await _userService.GetUser(User.Identity.Name);
+            var user2 = await _userService.GetUser(response.Data.OwnerName);
+            var messages = await _chatMessageService.GetMessages(id.ToString(), user1.Data.Id.ToString(), user2.Data.Id.ToString());
+
+            if(messages.Data == null)
+            {
+                await _chatMessageService.GetOrCreateChat(id.ToString(), user1.Data.Id.ToString(), user2.Data.Id.ToString(), null);
+                messages = await _chatMessageService.GetMessages(id.ToString(), user1.Data.Id.ToString(), user2.Data.Id.ToString());
+            }            
+
+            if (messages.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return Json(messages.Data);
+            }
+            return RedirectToAction("GetProducts", "Product");           
+        }*/
     }
 }

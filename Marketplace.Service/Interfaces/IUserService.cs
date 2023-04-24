@@ -1,5 +1,6 @@
 ﻿using Marketplace.Domain.Entity;
 using Marketplace.Domain.Response;
+using Marketplace.Domain.ViewModels.Profile;
 using Marketplace.Domain.ViewModels.User;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace Marketplace.Service.Interfaces
         BaseResponse<Dictionary<int, string>> GetRoles();
 
         Task<BaseResponse<IEnumerable<UserViewModel>>> GetUsers();
+
+        Task<BaseResponse<UserViewModel>> GetUser(string userName);
 
         Task<IBaseResponse<bool>> DeleteUser(long id);
     }

@@ -5,6 +5,7 @@ using Marketplace.Domain.Enum;
 using Marketplace.Domain.Extensions;
 using Marketplace.Domain.Helpers;
 using Marketplace.Domain.Response;
+using Marketplace.Domain.ViewModels.Product;
 using Marketplace.Domain.ViewModels.User;
 using Marketplace.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,9 @@ namespace Marketplace.Service.Implementations
 {
     public class UserService : IUserService
     {
+
+        #region Include Data Base
+
         private readonly ILogger<UserService> _logger;
         private readonly IBaseRepository<Profile> _proFileRepository;
         private readonly IBaseRepository<User> _userRepository;
@@ -30,6 +34,10 @@ namespace Marketplace.Service.Implementations
             _userRepository = userRepository;
             _proFileRepository = proFileRepository;
         }
+
+        #endregion
+
+        #region Create
 
         public async Task<IBaseResponse<User>> Create(UserViewModel model)
         {
@@ -80,6 +88,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Get Roles
+
         public BaseResponse<Dictionary<int, string>> GetRoles()
         {
             try
@@ -103,6 +115,9 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Get Users
         public async Task<BaseResponse<IEnumerable<UserViewModel>>> GetUsers()
         {
             try
@@ -132,7 +147,11 @@ namespace Marketplace.Service.Implementations
                     Description = $"Внутренняя ошибка: {ex.Message}"
                 };
             }
-        }       
+        }
+
+        #endregion
+
+        #region Delete User
 
         public async Task<IBaseResponse<bool>> DeleteUser(long id)
         {
@@ -166,5 +185,49 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
+        public async Task<BaseResponse<UserViewModel>> GetUser(string userName)
+        {
+            
+
+
+            try
+            {
+                var users = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == userName);
+
+                if (users == null)
+                {
+                    return new BaseResponse<UserViewModel>()
+                    {
+                        Description = "Користувач не знайдений",
+                        StatusCode = StatusCode.UserNotFound
+                    };
+                }
+
+                var data = new UserViewModel()
+                {
+                    Id = users.Id,
+                    Name = users.Name
+                };
+
+                return new BaseResponse<UserViewModel>()
+                {
+                    StatusCode = StatusCode.OK,
+                    Data = data
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<UserViewModel>()
+                {
+                    Description = $"[GetProduct] : {ex.Message}",
+                    StatusCode = StatusCode.InternalServerError
+                };
+            }
+
+        }
+
     }
 }

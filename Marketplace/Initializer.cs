@@ -17,6 +17,7 @@ namespace Marketplace
             services.AddScoped<IBaseRepository<Cart>, CartRepository>();
             services.AddScoped<IBaseRepository<Order>, OrderRepository>();
             services.AddScoped<IBaseRepository<Bid>, BidRepository>();
+            services.AddScoped<IBaseRepository<ChatMessage>, ChatMessageRepository>();
         }
 
         public static void InitializeServices(this IServiceCollection services)
@@ -27,6 +28,7 @@ namespace Marketplace
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IChatMessageService, ChatMessageService>();
         }
     }
 }

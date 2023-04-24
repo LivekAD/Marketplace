@@ -1,0 +1,19 @@
+﻿@model IEnumerable<Marketplace.Domain.ViewModels.Chat.ChatMessageViewModel>
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
+    //var chatData = IEnumerable<Marketplace.Domain.ViewModels.Chat.ChatMessageViewModel>.FirstOrDefault();
+}
+
+<div id="messages">
+    
+</div>
+
+<form id="chat-form">
+    <div data-mydata="@Model"></div>
+    <input type="text" id="message-input" name="message" />
+    <input type="button" id="sendButton" value="Send Message"/>
+</form>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/clientHub.js"></script>

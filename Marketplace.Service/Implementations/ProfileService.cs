@@ -16,6 +16,9 @@ namespace Marketplace.Service.Implementations
 {
     public class ProfileService : IProfileService
     {
+
+        #region Include Data Base
+
         private readonly ILogger<ProfileService> _logger;
         private readonly IBaseRepository<Profile> _profileRepository;
 
@@ -25,6 +28,10 @@ namespace Marketplace.Service.Implementations
             _profileRepository = profileRepository;
             _logger = logger;
         }
+
+        #endregion
+
+        #region Get Profile
 
         public async Task<BaseResponse<ProfileViewModel>> GetProfile(string userName)
         {
@@ -57,6 +64,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Save
+
         public async Task<BaseResponse<Profile>> Save(ProfileViewModel model)
         {
             try
@@ -86,5 +97,8 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
     }
 }

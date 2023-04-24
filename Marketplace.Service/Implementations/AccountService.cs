@@ -18,6 +18,9 @@ namespace Marketplace.Service.Implementations
 {
     public class AccountService : IAccountService
     {
+
+        #region Include Data Base
+
         private readonly IBaseRepository<Profile> _proFileRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Cart> _basketRepository;
@@ -33,6 +36,9 @@ namespace Marketplace.Service.Implementations
             _basketRepository = basketRepository;
         }
 
+        #endregion
+
+        #region Register
         public async Task<BaseResponse<ClaimsIdentity>> Register(RegisterViewModel model)
         {
             try
@@ -86,7 +92,9 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+        #endregion
 
+        #region Login
         public async Task<BaseResponse<ClaimsIdentity>> Login(LoginViewModel model)
         {
             try
@@ -126,6 +134,9 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Change Password
         public async Task<BaseResponse<bool>> ChangePassword(ChangePasswordViewModel model)
         {
             try
@@ -162,6 +173,9 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Authenticator
         private ClaimsIdentity Authenticate(User user)
         {
             var claims = new List<Claim>
@@ -172,5 +186,7 @@ namespace Marketplace.Service.Implementations
             return new ClaimsIdentity(claims, "ApplicationCookie",
                 ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
         }
+
+        #endregion
     }
 }

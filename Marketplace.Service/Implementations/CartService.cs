@@ -16,6 +16,9 @@ namespace Marketplace.Service.Implementations
 {
     public class CartService : ICartService
     {
+
+        #region Inculde Data Base
+
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Product> _productRepository;
 
@@ -25,6 +28,9 @@ namespace Marketplace.Service.Implementations
             _productRepository = productRepository;
         }
 
+        #endregion
+
+        #region Get Items
         public async Task<IBaseResponse<IEnumerable<OrderViewModel>>> GetItems(string userName)
         {
             try
@@ -70,6 +76,10 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
+        #region Get Item
 
         public async Task<IBaseResponse<OrderViewModel>> GetItem(string userName, long id)
         {
@@ -130,5 +140,8 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
     }
 }

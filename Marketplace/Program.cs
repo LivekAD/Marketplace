@@ -1,4 +1,5 @@
 using Marketplace;
+using Marketplace.Hubs;
 using Marketplace.DAL;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.InitializeRepositories();
 builder.Services.InitializeServices();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -38,7 +40,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -53,5 +54,19 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<ConnectedHub>("/ConnectedHub");
+
+/*app.UseEndpoints(endpoints =>
+{
+    endpoints.MapHub<ConnectedHub>("/ConnectedHub");
+    endpoints.MapControllerRoute(
+    name: "chat",
+    pattern: "chat/{productId}/{user1Id}/{user2Id}",
+    defaults: new { controller = "Product", action = "GetProducts" });
+    endpoints.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+});*/
 
 app.Run();

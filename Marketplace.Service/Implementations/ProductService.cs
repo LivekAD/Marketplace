@@ -19,6 +19,9 @@ namespace Marketplace.Service.Implementations
 {
     public class ProductService : IProductService
     {
+
+        #region Include Data Base
+
         private readonly IBaseRepository<Product> _productRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Bid> _bidRepository;
@@ -29,6 +32,10 @@ namespace Marketplace.Service.Implementations
             _userRepository = userRepository;
             _bidRepository = bidRepository;
         }
+
+        #endregion
+
+        #region Add Bid
 
         public async Task<BaseResponse<bool>> AddBid(Bid bid, string BidNameUser)
         {
@@ -69,6 +76,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Create
+
         public async Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData, string ownerName)
         {
             try
@@ -103,6 +114,10 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
+        #region Delete Product
 
         public async Task<IBaseResponse<bool>> DeleteProduct(long id, string ownerName)
         {
@@ -139,6 +154,10 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
+        #region Edit
 
         public async Task<IBaseResponse<Product>> Edit(long id, ProductViewModel model)
         {
@@ -179,6 +198,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Get Category
+
         public BaseResponse<Dictionary<int, string>> GetCategory()
         {
             try
@@ -202,6 +225,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Get Product Id
+
         public async Task<IBaseResponse<ProductViewModel>> GetProduct(long id)
         {
             try
@@ -218,6 +245,7 @@ namespace Marketplace.Service.Implementations
 
                 var data = new ProductViewModel()
                 {
+                    Id = id,
                     DateCreate = product.DateCreate.ToLongDateString(),
                     Description = product.Description,
                     Name = product.Name,
@@ -225,6 +253,8 @@ namespace Marketplace.Service.Implementations
                     Category = product.Category.GetDisplayName(),
                     SubCategory = product.SubCategory.GetDisplayName(),
                     Image = product.Photo,
+                    OwnerName = product.OwnerName,
+                    ChatMessages = product.ChatMessages
                 };
 
                 return new BaseResponse<ProductViewModel>()
@@ -242,6 +272,10 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
+        #region Get Product Term
 
         public async Task<BaseResponse<Dictionary<long, string>>> GetProduct(string term)
         {
@@ -275,6 +309,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Get Products
+
         public IBaseResponse<List<Product>> GetProducts()
         {
             try
@@ -305,6 +343,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Get Sub Category
+
         public BaseResponse<Dictionary<int, string>> GetSubCategory()
         {
             try
@@ -327,6 +369,10 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
+        #region Search
 
         public IBaseResponse<List<Product>> Search(string searchString)
         {
@@ -367,5 +413,8 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
     }
 }

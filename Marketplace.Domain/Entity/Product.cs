@@ -33,5 +33,7 @@ namespace Marketplace.Domain.Entity
 
         public virtual List<Bid>? Bids { get; set; }
 
+        public List<ChatMessage>? ChatMessages { get; set; }
+
     }
 }

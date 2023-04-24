@@ -59,6 +59,32 @@ namespace Marketplace.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ChatMessages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    User1Id = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    User1Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    User2Id = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    User2Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProductId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProductId1 = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChatMessages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ChatMessages_Products_ProductId1",
+                        column: x => x.ProductId1,
+                        principalTable: "Products",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -149,9 +175,9 @@ namespace Marketplace.DAL.Migrations
                 columns: new[] { "Id", "Category", "DateCreate", "Description", "EndingAuction", "Name", "OwnerName", "Photo", "Price", "SubCategory", "isAuction" },
                 values: new object[,]
                 {
-                    { 1L, 31, new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7592), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
-                    { 2L, 31, new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7646), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
-                    { 3L, 31, new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7651), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
+                    { 1L, 31, new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1781), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
+                    { 2L, 31, new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1814), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
+                    { 3L, 31, new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1817), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
                 });
 
             migrationBuilder.InsertData(
@@ -185,6 +211,11 @@ namespace Marketplace.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_ProductId1",
+                table: "ChatMessages",
+                column: "ProductId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_CartId",
                 table: "Orders",
                 column: "CartId");
@@ -206,6 +237,9 @@ namespace Marketplace.DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Bids");
+
+            migrationBuilder.DropTable(
+                name: "ChatMessages");
 
             migrationBuilder.DropTable(
                 name: "Orders");

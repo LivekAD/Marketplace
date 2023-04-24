@@ -15,6 +15,9 @@ namespace Marketplace.Service.Implementations
 {
     public class OrderService : IOrderService
     {
+
+        #region Include Data Base
+
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Order> _orderRepository;
 
@@ -23,6 +26,10 @@ namespace Marketplace.Service.Implementations
             _userRepository = userRepository;
             _orderRepository = orderRepository;
         }
+
+        #endregion
+
+        #region Create
 
         public async Task<IBaseResponse<Order>> Create(CreateOrderViewModel model)
         {
@@ -69,6 +76,10 @@ namespace Marketplace.Service.Implementations
             }
         }
 
+        #endregion
+
+        #region Delete
+
         public async Task<IBaseResponse<bool>> Delete(long id)
         {
             try
@@ -102,5 +113,8 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        #endregion
+
     }
 }

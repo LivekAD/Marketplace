@@ -82,6 +82,54 @@ namespace Marketplace.DAL.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Marketplace.Domain.Entity.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("GroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("ProductId1")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("User1Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User1Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User2Id")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User2Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId1");
+
+                    b.ToTable("ChatMessages");
+                });
+
             modelBuilder.Entity("Marketplace.Domain.Entity.Order", b =>
                 {
                     b.Property<long>("Id")
@@ -172,7 +220,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7592),
+                            DateCreate = new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1781),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             OwnerName = "Admin",
@@ -183,7 +231,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7646),
+                            DateCreate = new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1814),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
                             OwnerName = "Admin",
@@ -194,7 +242,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 4, 1, 11, 58, 1, 770, DateTimeKind.Local).AddTicks(7651),
+                            DateCreate = new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1817),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
                             OwnerName = "Admin",
@@ -301,6 +349,13 @@ namespace Marketplace.DAL.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Marketplace.Domain.Entity.ChatMessage", b =>
+                {
+                    b.HasOne("Marketplace.Domain.Entity.Product", null)
+                        .WithMany("ChatMessages")
+                        .HasForeignKey("ProductId1");
+                });
+
             modelBuilder.Entity("Marketplace.Domain.Entity.Order", b =>
                 {
                     b.HasOne("Marketplace.Domain.Entity.Cart", "Cart")
@@ -340,6 +395,8 @@ namespace Marketplace.DAL.Migrations
             modelBuilder.Entity("Marketplace.Domain.Entity.Product", b =>
                 {
                     b.Navigation("Bids");
+
+                    b.Navigation("ChatMessages");
                 });
 
             modelBuilder.Entity("Marketplace.Domain.Entity.User", b =>

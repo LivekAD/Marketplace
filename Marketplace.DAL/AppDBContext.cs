@@ -18,12 +18,19 @@ namespace Marketplace.DAL
             Database.EnsureCreated();
         }
 
+        #region Create Tables
+
         public DbSet<Product> Products{ get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Bid> Bids { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+
+        #endregion
+
+        #region Model Creator
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -139,6 +146,8 @@ namespace Marketplace.DAL
                     .HasForeignKey(r => r.CartId);
             });
         }
+
+        #endregion
 
     }
 }

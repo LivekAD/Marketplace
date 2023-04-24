@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Marketplace.Domain.Entity;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -46,6 +47,9 @@ namespace Marketplace.Domain.ViewModels.Product
         public string? isAuction { get; set; }
 
         [Display(Name = "Коли закінчиться аукціон")]
-        public DateTime? EndingAuction { get; set; }
+        public DateTime? EndingAuction { get; set; }    
+        
+        public List<ChatMessage>? ChatMessages { get; set; }
+
     }
 }
