@@ -21,12 +21,12 @@ namespace Marketplace.Hubs
             _userService = userService;
         }
 
-        public async Task JoinChat(string chatId)
+		public async Task JoinChat(string chatId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, chatId);
         }
 
-        public async Task SendMessage(int productId, string user1, string user2, string message)
+		public async Task SendMessage(int productId, string user1, string user2, string message)
         {
             var user1Id = _userService.GetUser(user1);
             var user2Id = _userService.GetUser(user2);

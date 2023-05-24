@@ -1,5 +1,7 @@
 ﻿using Azure;
 using Marketplace.Domain.Entity;
+using Marketplace.Domain.Enum;
+using Marketplace.Domain.Extensions;
 using Marketplace.Domain.ViewModels.Account;
 using Marketplace.Domain.ViewModels.Chat;
 using Marketplace.Domain.ViewModels.Product;
@@ -140,17 +142,18 @@ namespace Marketplace.Controllers
         public async Task<ActionResult> GetProduct(int id, bool isJson)
         {
             var response = await _productService.GetProduct(id);
-/*            var user1 = await _userService.GetUser(User.Identity.Name);
-            var user2 = await _userService.GetUser(response.Data.OwnerName);*/
-            var messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
-
-            if (messages.Data == null)
+            if (User.Identity.Name != null)
             {
-                await _chatMessageService.GetOrCreateChat(id.ToString(), User.Identity.Name, response.Data.OwnerName, null);
-                messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
-            }
+				var messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
 
-            response.Data.ChatMessages = messages.Data;
+				if (messages.Data == null)
+				{
+					await _chatMessageService.GetOrCreateChat(id.ToString(), User.Identity.Name, response.Data.OwnerName, null);
+					messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
+				}
+
+				response.Data.ChatMessages = messages.Data;
+			}           
 
             if (isJson)
             {
@@ -215,7 +218,7 @@ namespace Marketplace.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new { modelError.FirstOrDefault().ErrorMessage });
         }
 
-        /*[HttpPost]
+		/*[HttpPost]
         public async Task<IActionResult> Chat(int id)
         {
             var response = await _productService.GetProduct(id);
@@ -235,5 +238,31 @@ namespace Marketplace.Controllers
             }
             return RedirectToAction("GetProducts", "Product");           
         }*/
+
+		[HttpGet]
+		public IActionResult GetProductsByCategory(string category)
+		{
+			var response = _productService.GetProductsByCategory(category);
+
+			if (response.StatusCode == Domain.Enum.StatusCode.OK)
+			{
+			    return View("GetProducts", response.Data);
+			}
+
+			return View("Error", $"{response.Description}");
+
+		}
+
+        [HttpPost]
+        public JsonResult GetSubcategories(int categoryId)
+        {
+            var subcategories = Enum.GetValues(typeof(SubCategory))
+                .Cast<SubCategory>()
+                .Where(s => (((int)s - 4000) / 10) == categoryId)
+                .Select(s => new { Id = (int)s, Name = s.GetDisplayName() })
+                .ToList();
+
+            return Json(subcategories);
+        }
     }
 }

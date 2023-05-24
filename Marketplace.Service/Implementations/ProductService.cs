@@ -309,11 +309,45 @@ namespace Marketplace.Service.Implementations
             }
         }
 
-        #endregion
+		#endregion
 
-        #region Get Products
+		#region Get Product by category
 
-        public IBaseResponse<List<Product>> GetProducts()
+		public IBaseResponse<List<Product>> GetProductsByCategory(string category)
+		{
+			try
+			{
+				var products = _productRepository.GetAll().AsEnumerable().Where(x => x.Category.ToString() == category).ToList();
+				if (!products.Any())
+				{
+					return new BaseResponse<List<Product>>()
+					{
+						Description = "Знайдено 0 елементів",
+						StatusCode = StatusCode.OK
+					};
+				}
+
+				return new BaseResponse<List<Product>>()
+				{
+					Data = products,
+					StatusCode = StatusCode.OK
+				};
+			}
+			catch (Exception ex)
+			{
+				return new BaseResponse<List<Product>>()
+				{
+					Description = $"[GetProducts] : {ex.Message}",
+					StatusCode = StatusCode.InternalServerError
+				};
+			}
+		}
+
+		#endregion
+
+		#region Get Products
+
+		public IBaseResponse<List<Product>> GetProducts()
         {
             try
             {

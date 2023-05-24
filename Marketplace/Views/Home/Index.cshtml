@@ -1,149 +1,179 @@
-﻿@{
-    ViewData["Title"] = "Главная";
+﻿@model List<Product>
+
+@{
+    ViewBag.Title = "Головна";
+    Layout = "_Layout";
 }
 
-<div style="padding: 10px;"></div>
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="card col-md-12">
-        <div class="card-body">
-            <h5 class="card-title text-center">Ласкаво просимо на сайт Marketplace</h5>
-            <p class="card-text">
-                Сайт ще в розробці
-            </p>
-            <p class="card-text"><small class="text-muted">Livek</small></p>
-        </div>
-    </div>
-
-    <div style="padding: 10px;"></div>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="col">
-                <div class="card h-100">
-                    <img src="https://images.wallpaperscraft.ru/image/single/mashina_noch_dozhd_143166_1280x720.jpg" class="card-img-top card-image" />
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Product 1</h5>
-                        <p class="card-text">Product 11</p>
-                    </div>
-                    <div class="card-footer text-center">
-                        <a asp-controller="Product" asp-action="GetProducts" class="card-link">Список оголошень</a>
-                    </div>
-                </div>
-            </div>
-        }
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://images.wallpaperscraft.ru/image/single/bmw_fary_avtomobil_124112_1280x720.jpg" class="card-img-top card-image" />
-                <div class="card-body text-center">
-                    <h5 class="card-title">Product 2</h5>
-                    <p class="card-text">
-                        Product 22
-                    </p>
-                </div>
-                <div class="card-footer text-center">
-                    <a asp-controller="Product" asp-action="GetProducts" class="card-link">Список машин</a>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="https://images.wallpaperscraft.ru/image/single/audi_avtomobil_vid_speredi_130942_1280x720.jpg" class="card-img-top card-image" />
-                <div class="card-body text-center">
-                    <h5 class="card-title">Product 3</h5>
-                    <p class="card-text">Product 33</p>
-                </div>
-                <div class="card-footer text-center">
-                    <a asp-controller="Product" asp-action="GetProducts" class="card-link">Список машин</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div style="padding: 10px;"></div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Text</h5>
-            <p class="card-text">
-                More text
-            </p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
-        </div>
-    </div>
-
-    <div style="padding: 10px;"></div>
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Text title</h5>
-        </div>
-        <ul class="list-group list-group-flush" id="ulListId">
-            <li class="list-group-item">1</li>
-            <li class="list-group-item">2</li>
-            <li class="list-group-item">3</li>
-            <li class="list-group-item">4</li>
-            <li class="list-group-item">5</li>
-            <li class="list-group-item">6</li>
-            <li class="list-group-item">7</li>
-            <li class="list-group-item">8</li>
-        </ul>
-        <div class="card-body">
-            <button class="btn btn-danger" id="btnHideId">Сховати</button>
-            <button class="btn btn-primary" id="btnShowId">Показати</button>
-        </div>
-    </div>
-}
-else
-{
-    <div class="card">
-        <div class="card-header">
-            Ви не авторизовані
-        </div>
-        <div class="card-body">
-            <blockquote class="blockquote mb-0">
-                <p>Для перегляду контенту ви повинні авторизуватися</p>
-            </blockquote>
-        </div>
-    </div>
-
-    <div style="padding: 10px;"></div>
-
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card h-100">
-                <img src="~/img/Bmw_I8.jpg" class="card-img-top" alt="Photo">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Недоступно</h5>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">Text</small>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="~/img/Mustang.jpg" class="card-img-top" alt="photo">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Недоступно</h5>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">Text</small>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100">
-                <img src="~/img/Bmw.jpg" class="card-img-top" alt="photo">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Недоступно</h5>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">Text</small>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+<section class="page__main main-block">
+	<div class="main-block__container">
+		<div class="main-block__content">
+			<div class="main-block__category category">
+				<h1 class="category__title title">
+					Категорії
+				</h1>
+				<div class="category__cards cards-category">
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Electronics">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/laptop.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Електроніка
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Clothing_and_footwear">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/tshirt.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Одяг та взуття
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Home_goods">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/home.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Домашні товари
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Sports_and_recreation">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/bed.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Спорт та відпочинок
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Beauty_and_care">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/mirror.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Краса та догляд
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Food_and_beverages">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/plant.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Їжа та напої
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Cars_and_motorcycles">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/car.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Автомобілі та мотоцикли
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Products_for_pets">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/beer.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Товари для тварин
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Tools_and_equipment">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/tool.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Інструменти та обладнання
+							</h4>
+						</a>
+					</div>
+					<div class="cards-category__card-category card-category">
+						<a asp-controller="Product" asp-action="GetProductsByCategory" asp-route-category="Books_and_media">
+							<div class="card-category__image">
+								<picture><source srcset="~/img/folder.svg" type="image/svg+xml"><img src="img/cover.jpg" alt=""></picture>
+							</div>
+							<h4 class="card-category__title">
+								Книги та медіа
+							</h4>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="page__product product-block">
+	<div class="product-block__container">
+		<div class="product-block__content">
+			<div class="product-block__product product">
+				<div class="product__slider swiper">
+					<div class="product__wrapper swiper-wrapper">
+						@if(Model.Count >= 10)
+						{
+							foreach(var product in Model.Take(10))
+							{
+								<a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id">
+									<div class="product__slide swiper-slide">
+										<div class="product__card">
+											<div class="product__image">
+												<picture><source srcset="img/cover.webp" type="image/webp"><img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" /></picture>
+											</div>
+											<div class="product__title">
+												@product.Name
+											</div>
+											<div class="product__price">
+												@product.Price
+											</div>
+										</div>
+									</div>
+								</a>
+							}
+						}
+						else
+						{
+							foreach (var product in Model)
+							{
+								
+									<div class="product__slide swiper-slide">
+										<a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id">
+											<div class="product__card">
+												<div class="product__image">
+												<img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;" />
+												</div>
+												<div class="product__title">
+													@product.Name
+												</div>
+												<div class="product__price">
+													@product.Price
+												</div>
+											</div>
+										</a>
+									</div>
+							}
+						}
+					</div>
+					<div class="swiper-scrollbar"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
 
 @section pageScripts
     {

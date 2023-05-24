@@ -40,40 +40,46 @@
     </div>
 </form>
 
-@foreach (var message in Model.ChatMessages)
+@if (User.Identity.IsAuthenticated)
 {
+    @foreach (var message in Model.ChatMessages)
+    {
 
-    if((message.User1Name == User.Identity.Name || message.User1Name == Model.OwnerName)
-    && (message.User2Name == User.Identity.Name || message.User2Name == Model.OwnerName)) {
-
-        if (message.User1Name == User.Identity.Name || message.User2Name == User.Identity.Name)
+        if ((message.User1Name == User.Identity.Name || message.User1Name == Model.OwnerName)
+        && (message.User2Name == User.Identity.Name || message.User2Name == Model.OwnerName))
         {
-            <div class = "Chat__Left_User">
-                <p>@message.Message</p>
-                <p>@message.Timestamp</p>
-            </div>
+
+            if (message.User1Name == User.Identity.Name || message.User2Name == User.Identity.Name)
+            {
+                <div class="Chat__Left_User">
+                    <p>@message.Message</p>
+                    <p>@message.Timestamp</p>
+                </div>
+            }
+            else
+            {
+                <div class="Chat__Right_User">
+                    <p>@message.Message</p>
+                    <p>@message.Timestamp</p>
+                </div>
+            }
+
         }
-        else
-        {
-            <div class="Chat__Right_User">
-                <p>@message.Message</p>
-                <p>@message.Timestamp</p>
-            </div>
-        }   
-        
+        <p>@message.Message</p>
+        <p>@message.Timestamp</p>
     }
-    <p>@message.Message</p>
-    <p>@message.Timestamp</p>
+
+    <div id="messages">
+    </div>
+
+
+    <form id="chat-form">
+        <input type="text" id="message-input" name="message" />
+        <input type="button" id="sendButton" value="Send Message" />
+    </form>
 }
 
-<div id="messages">
-</div>
 
-
-<form id="chat-form">
-    <input type="text" id="message-input" name="message" />
-    <input type="button" id="sendButton" value="Send Message" />
-</form>
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/clientHub.js"></script>

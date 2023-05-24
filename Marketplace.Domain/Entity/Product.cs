@@ -1,4 +1,5 @@
 ﻿using Marketplace.Domain.Enum;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Marketplace.Domain.Entity
 
         public string? OwnerName { get; set; }
 
-        public byte[]? Photo { get; set; }
+        public List<byte[]>? Photo { get; set; }
 
         public string? isAuction { get; set; }
 

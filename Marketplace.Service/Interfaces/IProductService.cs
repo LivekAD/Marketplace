@@ -1,4 +1,5 @@
 ﻿using Marketplace.Domain.Entity;
+using Marketplace.Domain.Enum;
 using Marketplace.Domain.Response;
 using Marketplace.Domain.ViewModels.Account;
 using Marketplace.Domain.ViewModels.Product;
@@ -24,7 +25,9 @@ namespace Marketplace.Service.Interfaces
 
         Task<IBaseResponse<ProductViewModel>> GetProduct(long id);
 
-        Task<BaseResponse<Dictionary<long, string>>> GetProduct(string term);
+		IBaseResponse<List<Product>> GetProductsByCategory(string category);
+
+		Task<BaseResponse<Dictionary<long, string>>> GetProduct(string term);
 
         Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData, string ownerName);
 
