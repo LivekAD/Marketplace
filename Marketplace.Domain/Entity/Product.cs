@@ -26,7 +26,7 @@ namespace Marketplace.Domain.Entity
 
         public string? OwnerName { get; set; }
 
-        public List<byte[]>? Photo { get; set; }
+        public byte[]? Photo { get; set; }
 
         public string? isAuction { get; set; }
 

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Marketplace.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialMaster : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -175,9 +175,9 @@ namespace Marketplace.DAL.Migrations
                 columns: new[] { "Id", "Category", "DateCreate", "Description", "EndingAuction", "Name", "OwnerName", "Photo", "Price", "SubCategory", "isAuction" },
                 values: new object[,]
                 {
-                    { 1L, 31, new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1781), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
-                    { 2L, 31, new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1814), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
-                    { 3L, 31, new DateTime(2023, 4, 13, 9, 56, 38, 510, DateTimeKind.Local).AddTicks(1817), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
+                    { 1L, 31, new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2604), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
+                    { 2L, 31, new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2650), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
+                    { 3L, 31, new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2655), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
                 });
 
             migrationBuilder.InsertData(

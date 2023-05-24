@@ -39,7 +39,7 @@ namespace Marketplace.Domain.ViewModels.Product
 
         public string? OwnerName { get; set; }
 
-        public IList<IFormFile> Photos { get; set; }
+        public IFormFile Photo { get; set; }
 
         public byte[]? Image { get; set; }
 
