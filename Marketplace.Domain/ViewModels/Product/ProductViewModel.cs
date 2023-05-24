@@ -41,7 +41,7 @@ namespace Marketplace.Domain.ViewModels.Product
 
         public IFormFile Photo { get; set; }
 
-        public byte[]? Image { get; set; }
+        public List<byte[]>? Image { get; set; }
 
         [Display(Name = "Це аукціон")]
         public string? isAuction { get; set; }
