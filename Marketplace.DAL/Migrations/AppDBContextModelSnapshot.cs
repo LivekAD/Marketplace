@@ -192,15 +192,15 @@ namespace Marketplace.DAL.Migrations
                     b.Property<DateTime?>("EndingAuction")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("MainPhoto")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OwnerName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -220,7 +220,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2604),
+                            DateCreate = new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5469),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             OwnerName = "Admin",
@@ -231,7 +231,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2650),
+                            DateCreate = new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5506),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
                             OwnerName = "Admin",
@@ -242,13 +242,35 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2655),
+                            DateCreate = new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5509),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
                             OwnerName = "Admin",
                             Price = 0m,
                             SubCategory = 4312
                         });
+                });
+
+            modelBuilder.Entity("Marketplace.Domain.Entity.ProductPhoto", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<byte[]>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductPhotos");
                 });
 
             modelBuilder.Entity("Marketplace.Domain.Entity.Profile", b =>
@@ -367,6 +389,15 @@ namespace Marketplace.DAL.Migrations
                     b.Navigation("Cart");
                 });
 
+            modelBuilder.Entity("Marketplace.Domain.Entity.ProductPhoto", b =>
+                {
+                    b.HasOne("Marketplace.Domain.Entity.Product", null)
+                        .WithMany("Photo")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Marketplace.Domain.Entity.Profile", b =>
                 {
                     b.HasOne("Marketplace.Domain.Entity.User", "User")
@@ -397,6 +428,8 @@ namespace Marketplace.DAL.Migrations
                     b.Navigation("Bids");
 
                     b.Navigation("ChatMessages");
+
+                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("Marketplace.Domain.Entity.User", b =>

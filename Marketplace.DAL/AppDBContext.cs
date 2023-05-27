@@ -27,6 +27,7 @@ namespace Marketplace.DAL
         public DbSet<User> Users { get; set; }
         public DbSet<Bid> Bids { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<ProductPhoto> ProductPhotos { get; set; }
 
         #endregion
 

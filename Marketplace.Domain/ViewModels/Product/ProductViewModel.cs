@@ -39,9 +39,9 @@ namespace Marketplace.Domain.ViewModels.Product
 
         public string? OwnerName { get; set; }
 
-        public IFormFile Photo { get; set; }
+        public IList<IFormFile> Photo { get; set; }
 
-        public List<byte[]>? Image { get; set; }
+        public List<ProductPhoto>? Image { get; set; }
 
         [Display(Name = "Це аукціон")]
         public string? isAuction { get; set; }

@@ -29,7 +29,7 @@ namespace Marketplace.Service.Interfaces
 
 		Task<BaseResponse<Dictionary<long, string>>> GetProduct(string term);
 
-        Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData, string ownerName);
+        Task<IBaseResponse<Product>> Create(ProductViewModel model, List<ProductPhoto> imageData, string ownerName);
 
         Task<IBaseResponse<bool>> DeleteProduct(long id, string ownerName);
 

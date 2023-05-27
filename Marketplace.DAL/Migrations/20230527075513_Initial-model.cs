@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Marketplace.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMaster : Migration
+    public partial class Initialmodel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,7 +26,7 @@ namespace Marketplace.DAL.Migrations
                     Category = table.Column<int>(type: "int", nullable: false),
                     SubCategory = table.Column<int>(type: "int", nullable: false),
                     OwnerName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    MainPhoto = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     isAuction = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndingAuction = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -82,6 +82,26 @@ namespace Marketplace.DAL.Migrations
                         column: x => x.ProductId1,
                         principalTable: "Products",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductPhotos",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductPhotos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductPhotos_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -172,12 +192,12 @@ namespace Marketplace.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "Category", "DateCreate", "Description", "EndingAuction", "Name", "OwnerName", "Photo", "Price", "SubCategory", "isAuction" },
+                columns: new[] { "Id", "Category", "DateCreate", "Description", "EndingAuction", "MainPhoto", "Name", "OwnerName", "Price", "SubCategory", "isAuction" },
                 values: new object[,]
                 {
-                    { 1L, 31, new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2604), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Apple Air Pods", "Admin", null, 0m, 4314, null },
-                    { 2L, 31, new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2650), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Pods", "Admin", null, 0m, 4314, null },
-                    { 3L, 31, new DateTime(2023, 5, 24, 14, 34, 50, 971, DateTimeKind.Local).AddTicks(2655), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, "Air", "Admin", null, 0m, 4312, null }
+                    { 1L, 31, new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5469), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Apple Air Pods", "Admin", 0m, 4314, null },
+                    { 2L, 31, new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5506), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Pods", "Admin", 0m, 4314, null },
+                    { 3L, 31, new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5509), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Air", "Admin", 0m, 4312, null }
                 });
 
             migrationBuilder.InsertData(
@@ -221,6 +241,11 @@ namespace Marketplace.DAL.Migrations
                 column: "CartId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductPhotos_ProductId",
+                table: "ProductPhotos",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Profiles_UserId",
                 table: "Profiles",
                 column: "UserId",
@@ -243,6 +268,9 @@ namespace Marketplace.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "ProductPhotos");
 
             migrationBuilder.DropTable(
                 name: "Profiles");

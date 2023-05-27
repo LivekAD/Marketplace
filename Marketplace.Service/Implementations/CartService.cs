@@ -58,7 +58,7 @@ namespace Marketplace.Service.Implementations
                                    ProductName = c.Name,
                                    Category = c.Category.GetDisplayName(),
                                    SubCategory = c.SubCategory.GetDisplayName(),
-                                   Image = c.Photo
+                                   Image = c.Photo[0].ImageData
                                };
 
                 return new BaseResponse<IEnumerable<OrderViewModel>>()
@@ -122,7 +122,7 @@ namespace Marketplace.Service.Implementations
                                     LastName = p.LastName,
                                     MiddleName = p.MiddleName,
                                     DateCreate = p.DateCreated.ToLongDateString(),
-                                    Image = c.Photo
+                                    Image = c.Photo[0].ImageData
                                 }).FirstOrDefault();
 
                 return new BaseResponse<OrderViewModel>()

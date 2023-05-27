@@ -23,14 +23,16 @@ namespace Marketplace.Service.Implementations
         #region Include Data Base
 
         private readonly IBaseRepository<Product> _productRepository;
+        private readonly IBaseRepository<ProductPhoto> _productPhotoRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Bid> _bidRepository;
 
-        public ProductService(IBaseRepository<Product> productRepository, IBaseRepository<User> userRepository, IBaseRepository<Bid> bidRepository)
+        public ProductService(IBaseRepository<Product> productRepository, IBaseRepository<User> userRepository, IBaseRepository<Bid> bidRepository, IBaseRepository<ProductPhoto> productPhotoRepository)
         {
             _productRepository = productRepository;
             _userRepository = userRepository;
             _bidRepository = bidRepository;
+            _productPhotoRepository = productPhotoRepository;
         }
 
         #endregion
@@ -80,7 +82,7 @@ namespace Marketplace.Service.Implementations
 
         #region Create
 
-        public async Task<IBaseResponse<Product>> Create(ProductViewModel model, byte[] imageData, string ownerName)
+        public async Task<IBaseResponse<Product>> Create(ProductViewModel model, List<ProductPhoto> imageData, string ownerName)
         {
             try
             {
@@ -92,6 +94,7 @@ namespace Marketplace.Service.Implementations
                     Category = (Category)Convert.ToInt32(model.Category),
                     SubCategory = (SubCategory)Convert.ToInt32(model.SubCategory),
                     Price = model.Price,
+                    MainPhoto = imageData[0].ImageData,
                     Photo = imageData,
                     OwnerName = ownerName,
                     isAuction = model.isAuction,
@@ -234,6 +237,7 @@ namespace Marketplace.Service.Implementations
             try
             {
                 var product = await _productRepository.GetAll().FirstOrDefaultAsync(x => x.Id == id);
+                var photo = await _productPhotoRepository.GetAll().Where(x => x.ProductId == id).ToListAsync();
                 if (product == null)
                 {
                     return new BaseResponse<ProductViewModel>()
@@ -352,6 +356,7 @@ namespace Marketplace.Service.Implementations
             try
             {
                 var products = _productRepository.GetAll().ToList();
+                var photo = _productPhotoRepository.GetAll().ToList();
                 if (!products.Any())
                 {
                     return new BaseResponse<List<Product>>()

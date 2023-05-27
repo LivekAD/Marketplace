@@ -128,11 +128,18 @@
 						{
 							foreach(var product in Model.Take(10))
 							{
-								<a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id">
-									<div class="product__slide swiper-slide">
+								<div class="product__slide swiper-slide">
+									<a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id">
 										<div class="product__card">
 											<div class="product__image">
-												<picture><source srcset="img/cover.webp" type="image/webp"><img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" /></picture>
+												@if (product.MainPhoto != null)
+												{
+													<img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.MainPhoto ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;" />
+												}
+												else
+												{
+													<img src="https://via.placeholder.com/200x160" />
+												}
 											</div>
 											<div class="product__title">
 												@product.Name
@@ -141,11 +148,11 @@
 												@product.Price
 											</div>
 										</div>
-									</div>
-								</a>
+									</a>
+								</div>
 							}
 						}
-						else
+						else if (Model.Count <= 10)
 						{
 							foreach (var product in Model)
 							{
@@ -154,7 +161,14 @@
 										<a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id">
 											<div class="product__card">
 												<div class="product__image">
-												<img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;" />
+												@if (product.MainPhoto != null)
+												{
+													<img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.MainPhoto ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;" />
+												}
+												else
+												{
+													<img src="https://via.placeholder.com/200x160" />
+												}												
 												</div>
 												<div class="product__title">
 													@product.Name

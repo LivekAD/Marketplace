@@ -91,12 +91,19 @@ namespace Marketplace.Controllers
             {
                 if (viewModel.Id == 0)
                 {
-                    byte[] imageData;
-                    using (var binaryReader = new BinaryReader(viewModel.Photo.OpenReadStream()))
+                    List<ProductPhoto> photos = new List<ProductPhoto>();
+                    foreach (var photo in viewModel.Photo)
                     {
-                        imageData = binaryReader.ReadBytes((int)viewModel.Photo.Length);
+                        using (var binaryReader = new BinaryReader(photo.OpenReadStream()))
+                        {
+                            byte[] imageData = binaryReader.ReadBytes((int)photo.Length);
+                            photos.Add(new ProductPhoto { ImageData = imageData });
+                        }
                     }
-                    await _productService.Create(viewModel, imageData, User.Identity.Name);
+                    if (viewModel.EndingAuction != null){
+                        viewModel.isAuction = "true";
+                    }
+                    await _productService.Create(viewModel, photos, User.Identity.Name);
                 }
                 else
                 {
@@ -106,7 +113,7 @@ namespace Marketplace.Controllers
             return RedirectToAction("GetProducts");
         }
 
-        [HttpGet]
+        /*[HttpGet]
         public async Task<IActionResult> SaveAuction()
         {
             return PartialView();
@@ -121,13 +128,16 @@ namespace Marketplace.Controllers
             {
                 if (viewModel.Id == 0)
                 {
-                    byte[] imageData;
-                    using (var binaryReader = new BinaryReader(viewModel.Photo.OpenReadStream()))
+                    List<ProductPhoto> photos = new List<ProductPhoto>();
+                    foreach (var photo in viewModel.Photo)
                     {
-                        imageData = binaryReader.ReadBytes((int)viewModel.Photo.Length);
+                        using (var binaryReader = new BinaryReader(photo.OpenReadStream()))
+                        {
+                            byte[] imageData = binaryReader.ReadBytes((int)photo.Length);
+                            photos.Add(new ProductPhoto { ImageData = imageData });
+                        }
                     }
-                    viewModel.isAuction = "true";
-                    await _productService.Create(viewModel, imageData, User.Identity.Name);
+                    await _productService.Create(viewModel, photos, User.Identity.Name);
                 }
                 else
                 {
@@ -135,7 +145,7 @@ namespace Marketplace.Controllers
                 }
             }
             return RedirectToAction("GetProducts");
-        }
+        }*/
 
 
         [HttpGet]
