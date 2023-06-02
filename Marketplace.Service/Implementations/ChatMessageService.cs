@@ -36,42 +36,7 @@ namespace Marketplace.Service.Implementations
 
         #endregion
 
-        /*#region Add Message
-        public async Task<IBaseResponse<ChatMessage>> AddMessage(string chatId, string senderId, string receiverId, string message)
-        {
-            try
-            {
-                var chat = new ChatMessage
-                {
-                    SenderId = senderId,
-                    ReceiverId = receiverId,
-                    Message = message,
-                    Date = DateTime.UtcNow,
-                    ChatId = chatId
-                };
-
-                await _chatMessageRepository.Create(chat);
-
-                return new BaseResponse<ChatMessage>()
-                {
-                    StatusCode = StatusCode.OK,
-                    Data = chat
-                };
-            }
-            catch (Exception ex)
-            {
-                return new BaseResponse<ChatMessage>()
-                {
-                    Description = $"[Create] : {ex.Message}",
-                    StatusCode = StatusCode.InternalServerError
-                };
-            }
-        }
-
-        #endregion*/
-
-
-        public async Task<IBaseResponse<ChatMessage>> GetOrCreateChat(string productId, string user1, string user2, string? message)
+        public async Task<IBaseResponse<ChatMessage>> CreateChat(string productId, string user1, string user2)
         {
             try
             {
@@ -85,7 +50,7 @@ namespace Marketplace.Service.Implementations
                     User1Name = user1,
                     User2Id = user2Id.Id.ToString(),
                     User2Name = user2,
-                    Message = message,
+                    Message = null,
                     Timestamp = DateTime.Now,
                     GroupName = GetGroupName(productId, user1Id.Id.ToString(), user2Id.Id.ToString()),
                 };
@@ -107,6 +72,44 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+
+        public async Task<IBaseResponse<ChatMessage>> SendMessage(string productId, string user1, string user2, string message, string GroupName)
+        {
+            try
+            {
+                var user1Id = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == user1);
+                var user2Id = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == user2);
+
+                var chat = new ChatMessage
+                {
+                    ProductId = productId,
+                    User1Id = user1Id.Id.ToString(),
+                    User1Name = user1,
+                    User2Id = user2Id.Id.ToString(),
+                    User2Name = user2,
+                    Message = message,
+                    Timestamp = DateTime.Now,
+                    GroupName = GroupName,
+                };
+
+                await _chatMessageRepository.Create(chat);
+
+                return new BaseResponse<ChatMessage>()
+                {
+                    StatusCode = StatusCode.OK,
+                    Data = chat
+                };
+            }
+            catch (Exception ex)
+            {
+                return new BaseResponse<ChatMessage>()
+                {
+                    Description = $"[GetOrCreateChat] : {ex.Message}",
+                    StatusCode = StatusCode.InternalServerError
+                };
+            }
+        }
+
         public async Task<IBaseResponse<List<ChatMessage>>> GetMessages(string productId, string user1, string user2)
         {
             try

@@ -98,8 +98,8 @@ namespace Marketplace.Service.Implementations
                     Photo = imageData,
                     OwnerName = ownerName,
                     isAuction = model.isAuction,
-                    EndingAuction = model.EndingAuction,
-                };
+                    EndingAuction = model.EndingAuction             
+				};
                 await _productRepository.Create(product);
 
                 return new BaseResponse<Product>()
@@ -258,8 +258,10 @@ namespace Marketplace.Service.Implementations
                     SubCategory = product.SubCategory.GetDisplayName(),
                     Image = product.Photo,
                     OwnerName = product.OwnerName,
-                    ChatMessages = product.ChatMessages
-                };
+                    ChatMessages = product.ChatMessages,
+                    User = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == product.OwnerName),
+                    Products = _productRepository.GetAll().Where(x => x.OwnerName == product.OwnerName).ToList()
+				};
 
                 return new BaseResponse<ProductViewModel>()
                 {

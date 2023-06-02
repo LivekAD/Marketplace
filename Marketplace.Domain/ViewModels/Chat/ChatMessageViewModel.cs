@@ -11,13 +11,7 @@ namespace Marketplace.Domain.ViewModels.Chat
     {
         public long Id { get; set; }
 
-        public int ProductId { get; set; }
-
-        public string User1Id { get; set; }
-
-        public string User2Id { get; set; }
-
-        public IEnumerable<ChatMessage> Chats { get; set; }
+        public List<ChatMessage> Chats { get; set; }
 
     }
 }

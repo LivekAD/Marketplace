@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Marketplace.DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialmodel : Migration
+    public partial class Initialchat : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -112,6 +112,9 @@ namespace Marketplace.DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<long>(type: "bigint", nullable: true)
                 },
@@ -195,18 +198,18 @@ namespace Marketplace.DAL.Migrations
                 columns: new[] { "Id", "Category", "DateCreate", "Description", "EndingAuction", "MainPhoto", "Name", "OwnerName", "Price", "SubCategory", "isAuction" },
                 values: new object[,]
                 {
-                    { 1L, 31, new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5469), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Apple Air Pods", "Admin", 0m, 4314, null },
-                    { 2L, 31, new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5506), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Pods", "Admin", 0m, 4314, null },
-                    { 3L, 31, new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5509), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Air", "Admin", 0m, 4312, null }
+                    { 1L, 31, new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5048), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Apple Air Pods", "Admin", 0m, 4314, null },
+                    { 2L, 31, new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5084), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Pods", "Admin", 0m, 4314, null },
+                    { 3L, 31, new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5087), "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", null, null, "Air", "Admin", 0m, 4312, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Name", "Password", "ProductId", "Role" },
+                columns: new[] { "Id", "DateCreate", "Email", "Name", "Password", "PhoneNumber", "ProductId", "Role" },
                 values: new object[,]
                 {
-                    { 1L, "Admin", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", null, 2 },
-                    { 2L, "Moderator", "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5", null, 1 }
+                    { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Admin", "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92", null, null, 2 },
+                    { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Moderator", "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5", null, null, 1 }
                 });
 
             migrationBuilder.InsertData(

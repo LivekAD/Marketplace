@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Marketplace.DAL.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230527075513_Initial-model")]
-    partial class Initialmodel
+    [Migration("20230602093639_Initial-chat")]
+    partial class Initialchat
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,7 +223,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5469),
+                            DateCreate = new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5048),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             OwnerName = "Admin",
@@ -234,7 +234,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5506),
+                            DateCreate = new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5084),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
                             OwnerName = "Admin",
@@ -245,7 +245,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 5, 27, 10, 55, 10, 47, DateTimeKind.Local).AddTicks(5509),
+                            DateCreate = new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5087),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
                             OwnerName = "Admin",
@@ -318,6 +318,12 @@ namespace Marketplace.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -325,6 +331,9 @@ namespace Marketplace.DAL.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<long?>("ProductId")
@@ -343,6 +352,7 @@ namespace Marketplace.DAL.Migrations
                         new
                         {
                             Id = 1L,
+                            DateCreate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Admin",
                             Password = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92",
                             Role = 2
@@ -350,6 +360,7 @@ namespace Marketplace.DAL.Migrations
                         new
                         {
                             Id = 2L,
+                            DateCreate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Moderator",
                             Password = "481f6cc0511143ccdd7e2d1b1b94faf0a700a8b49cd13922a70b5ae28acaa8c5",
                             Role = 1

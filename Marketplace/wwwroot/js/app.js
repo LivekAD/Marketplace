@@ -3151,18 +3151,451 @@
             destroy
         });
     }
+    function Scrollbar(_ref) {
+        let {swiper, extendParams, on, emit} = _ref;
+        const document = ssr_window_esm_getDocument();
+        let isTouched = false;
+        let timeout = null;
+        let dragTimeout = null;
+        let dragStartPos;
+        let dragSize;
+        let trackSize;
+        let divider;
+        extendParams({
+            scrollbar: {
+                el: null,
+                dragSize: "auto",
+                hide: false,
+                draggable: false,
+                snapOnRelease: true,
+                lockClass: "swiper-scrollbar-lock",
+                dragClass: "swiper-scrollbar-drag",
+                scrollbarDisabledClass: "swiper-scrollbar-disabled",
+                horizontalClass: `swiper-scrollbar-horizontal`,
+                verticalClass: `swiper-scrollbar-vertical`
+            }
+        });
+        swiper.scrollbar = {
+            el: null,
+            dragEl: null,
+            $el: null,
+            $dragEl: null
+        };
+        function setTranslate() {
+            if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+            const {scrollbar, rtlTranslate: rtl, progress} = swiper;
+            const {$dragEl, $el} = scrollbar;
+            const params = swiper.params.scrollbar;
+            let newSize = dragSize;
+            let newPos = (trackSize - dragSize) * progress;
+            if (rtl) {
+                newPos = -newPos;
+                if (newPos > 0) {
+                    newSize = dragSize - newPos;
+                    newPos = 0;
+                } else if (-newPos + dragSize > trackSize) newSize = trackSize + newPos;
+            } else if (newPos < 0) {
+                newSize = dragSize + newPos;
+                newPos = 0;
+            } else if (newPos + dragSize > trackSize) newSize = trackSize - newPos;
+            if (swiper.isHorizontal()) {
+                $dragEl.transform(`translate3d(${newPos}px, 0, 0)`);
+                $dragEl[0].style.width = `${newSize}px`;
+            } else {
+                $dragEl.transform(`translate3d(0px, ${newPos}px, 0)`);
+                $dragEl[0].style.height = `${newSize}px`;
+            }
+            if (params.hide) {
+                clearTimeout(timeout);
+                $el[0].style.opacity = 1;
+                timeout = setTimeout((() => {
+                    $el[0].style.opacity = 0;
+                    $el.transition(400);
+                }), 1e3);
+            }
+        }
+        function setTransition(duration) {
+            if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+            swiper.scrollbar.$dragEl.transition(duration);
+        }
+        function updateSize() {
+            if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+            const {scrollbar} = swiper;
+            const {$dragEl, $el} = scrollbar;
+            $dragEl[0].style.width = "";
+            $dragEl[0].style.height = "";
+            trackSize = swiper.isHorizontal() ? $el[0].offsetWidth : $el[0].offsetHeight;
+            divider = swiper.size / (swiper.virtualSize + swiper.params.slidesOffsetBefore - (swiper.params.centeredSlides ? swiper.snapGrid[0] : 0));
+            if ("auto" === swiper.params.scrollbar.dragSize) dragSize = trackSize * divider; else dragSize = parseInt(swiper.params.scrollbar.dragSize, 10);
+            if (swiper.isHorizontal()) $dragEl[0].style.width = `${dragSize}px`; else $dragEl[0].style.height = `${dragSize}px`;
+            if (divider >= 1) $el[0].style.display = "none"; else $el[0].style.display = "";
+            if (swiper.params.scrollbar.hide) $el[0].style.opacity = 0;
+            if (swiper.params.watchOverflow && swiper.enabled) scrollbar.$el[swiper.isLocked ? "addClass" : "removeClass"](swiper.params.scrollbar.lockClass);
+        }
+        function getPointerPosition(e) {
+            if (swiper.isHorizontal()) return "touchstart" === e.type || "touchmove" === e.type ? e.targetTouches[0].clientX : e.clientX;
+            return "touchstart" === e.type || "touchmove" === e.type ? e.targetTouches[0].clientY : e.clientY;
+        }
+        function setDragPosition(e) {
+            const {scrollbar, rtlTranslate: rtl} = swiper;
+            const {$el} = scrollbar;
+            let positionRatio;
+            positionRatio = (getPointerPosition(e) - $el.offset()[swiper.isHorizontal() ? "left" : "top"] - (null !== dragStartPos ? dragStartPos : dragSize / 2)) / (trackSize - dragSize);
+            positionRatio = Math.max(Math.min(positionRatio, 1), 0);
+            if (rtl) positionRatio = 1 - positionRatio;
+            const position = swiper.minTranslate() + (swiper.maxTranslate() - swiper.minTranslate()) * positionRatio;
+            swiper.updateProgress(position);
+            swiper.setTranslate(position);
+            swiper.updateActiveIndex();
+            swiper.updateSlidesClasses();
+        }
+        function onDragStart(e) {
+            const params = swiper.params.scrollbar;
+            const {scrollbar, $wrapperEl} = swiper;
+            const {$el, $dragEl} = scrollbar;
+            isTouched = true;
+            dragStartPos = e.target === $dragEl[0] || e.target === $dragEl ? getPointerPosition(e) - e.target.getBoundingClientRect()[swiper.isHorizontal() ? "left" : "top"] : null;
+            e.preventDefault();
+            e.stopPropagation();
+            $wrapperEl.transition(100);
+            $dragEl.transition(100);
+            setDragPosition(e);
+            clearTimeout(dragTimeout);
+            $el.transition(0);
+            if (params.hide) $el.css("opacity", 1);
+            if (swiper.params.cssMode) swiper.$wrapperEl.css("scroll-snap-type", "none");
+            emit("scrollbarDragStart", e);
+        }
+        function onDragMove(e) {
+            const {scrollbar, $wrapperEl} = swiper;
+            const {$el, $dragEl} = scrollbar;
+            if (!isTouched) return;
+            if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
+            setDragPosition(e);
+            $wrapperEl.transition(0);
+            $el.transition(0);
+            $dragEl.transition(0);
+            emit("scrollbarDragMove", e);
+        }
+        function onDragEnd(e) {
+            const params = swiper.params.scrollbar;
+            const {scrollbar, $wrapperEl} = swiper;
+            const {$el} = scrollbar;
+            if (!isTouched) return;
+            isTouched = false;
+            if (swiper.params.cssMode) {
+                swiper.$wrapperEl.css("scroll-snap-type", "");
+                $wrapperEl.transition("");
+            }
+            if (params.hide) {
+                clearTimeout(dragTimeout);
+                dragTimeout = utils_nextTick((() => {
+                    $el.css("opacity", 0);
+                    $el.transition(400);
+                }), 1e3);
+            }
+            emit("scrollbarDragEnd", e);
+            if (params.snapOnRelease) swiper.slideToClosest();
+        }
+        function events(method) {
+            const {scrollbar, touchEventsTouch, touchEventsDesktop, params, support} = swiper;
+            const $el = scrollbar.$el;
+            if (!$el) return;
+            const target = $el[0];
+            const activeListener = support.passiveListener && params.passiveListeners ? {
+                passive: false,
+                capture: false
+            } : false;
+            const passiveListener = support.passiveListener && params.passiveListeners ? {
+                passive: true,
+                capture: false
+            } : false;
+            if (!target) return;
+            const eventMethod = "on" === method ? "addEventListener" : "removeEventListener";
+            if (!support.touch) {
+                target[eventMethod](touchEventsDesktop.start, onDragStart, activeListener);
+                document[eventMethod](touchEventsDesktop.move, onDragMove, activeListener);
+                document[eventMethod](touchEventsDesktop.end, onDragEnd, passiveListener);
+            } else {
+                target[eventMethod](touchEventsTouch.start, onDragStart, activeListener);
+                target[eventMethod](touchEventsTouch.move, onDragMove, activeListener);
+                target[eventMethod](touchEventsTouch.end, onDragEnd, passiveListener);
+            }
+        }
+        function enableDraggable() {
+            if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+            events("on");
+        }
+        function disableDraggable() {
+            if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+            events("off");
+        }
+        function init() {
+            const {scrollbar, $el: $swiperEl} = swiper;
+            swiper.params.scrollbar = create_element_if_not_defined_createElementIfNotDefined(swiper, swiper.originalParams.scrollbar, swiper.params.scrollbar, {
+                el: "swiper-scrollbar"
+            });
+            const params = swiper.params.scrollbar;
+            if (!params.el) return;
+            let $el = dom(params.el);
+            if (swiper.params.uniqueNavElements && "string" === typeof params.el && $el.length > 1 && 1 === $swiperEl.find(params.el).length) $el = $swiperEl.find(params.el);
+            $el.addClass(swiper.isHorizontal() ? params.horizontalClass : params.verticalClass);
+            let $dragEl = $el.find(`.${swiper.params.scrollbar.dragClass}`);
+            if (0 === $dragEl.length) {
+                $dragEl = dom(`<div class="${swiper.params.scrollbar.dragClass}"></div>`);
+                $el.append($dragEl);
+            }
+            Object.assign(scrollbar, {
+                $el,
+                el: $el[0],
+                $dragEl,
+                dragEl: $dragEl[0]
+            });
+            if (params.draggable) enableDraggable();
+            if ($el) $el[swiper.enabled ? "removeClass" : "addClass"](swiper.params.scrollbar.lockClass);
+        }
+        function destroy() {
+            const params = swiper.params.scrollbar;
+            const $el = swiper.scrollbar.$el;
+            if ($el) $el.removeClass(swiper.isHorizontal() ? params.horizontalClass : params.verticalClass);
+            disableDraggable();
+        }
+        on("init", (() => {
+            if (false === swiper.params.scrollbar.enabled) disable(); else {
+                init();
+                updateSize();
+                setTranslate();
+            }
+        }));
+        on("update resize observerUpdate lock unlock", (() => {
+            updateSize();
+        }));
+        on("setTranslate", (() => {
+            setTranslate();
+        }));
+        on("setTransition", ((_s, duration) => {
+            setTransition(duration);
+        }));
+        on("enable disable", (() => {
+            const {$el} = swiper.scrollbar;
+            if ($el) $el[swiper.enabled ? "removeClass" : "addClass"](swiper.params.scrollbar.lockClass);
+        }));
+        on("destroy", (() => {
+            destroy();
+        }));
+        const enable = () => {
+            swiper.$el.removeClass(swiper.params.scrollbar.scrollbarDisabledClass);
+            if (swiper.scrollbar.$el) swiper.scrollbar.$el.removeClass(swiper.params.scrollbar.scrollbarDisabledClass);
+            init();
+            updateSize();
+            setTranslate();
+        };
+        const disable = () => {
+            swiper.$el.addClass(swiper.params.scrollbar.scrollbarDisabledClass);
+            if (swiper.scrollbar.$el) swiper.scrollbar.$el.addClass(swiper.params.scrollbar.scrollbarDisabledClass);
+            destroy();
+        };
+        Object.assign(swiper.scrollbar, {
+            enable,
+            disable,
+            updateSize,
+            setTranslate,
+            init,
+            destroy
+        });
+    }
+    function Autoplay(_ref) {
+        let {swiper, extendParams, on, emit} = _ref;
+        let timeout;
+        swiper.autoplay = {
+            running: false,
+            paused: false
+        };
+        extendParams({
+            autoplay: {
+                enabled: false,
+                delay: 3e3,
+                waitForTransition: true,
+                disableOnInteraction: true,
+                stopOnLastSlide: false,
+                reverseDirection: false,
+                pauseOnMouseEnter: false
+            }
+        });
+        function run() {
+            if (!swiper.size) {
+                swiper.autoplay.running = false;
+                swiper.autoplay.paused = false;
+                return;
+            }
+            const $activeSlideEl = swiper.slides.eq(swiper.activeIndex);
+            let delay = swiper.params.autoplay.delay;
+            if ($activeSlideEl.attr("data-swiper-autoplay")) delay = $activeSlideEl.attr("data-swiper-autoplay") || swiper.params.autoplay.delay;
+            clearTimeout(timeout);
+            timeout = utils_nextTick((() => {
+                let autoplayResult;
+                if (swiper.params.autoplay.reverseDirection) if (swiper.params.loop) {
+                    swiper.loopFix();
+                    autoplayResult = swiper.slidePrev(swiper.params.speed, true, true);
+                    emit("autoplay");
+                } else if (!swiper.isBeginning) {
+                    autoplayResult = swiper.slidePrev(swiper.params.speed, true, true);
+                    emit("autoplay");
+                } else if (!swiper.params.autoplay.stopOnLastSlide) {
+                    autoplayResult = swiper.slideTo(swiper.slides.length - 1, swiper.params.speed, true, true);
+                    emit("autoplay");
+                } else stop(); else if (swiper.params.loop) {
+                    swiper.loopFix();
+                    autoplayResult = swiper.slideNext(swiper.params.speed, true, true);
+                    emit("autoplay");
+                } else if (!swiper.isEnd) {
+                    autoplayResult = swiper.slideNext(swiper.params.speed, true, true);
+                    emit("autoplay");
+                } else if (!swiper.params.autoplay.stopOnLastSlide) {
+                    autoplayResult = swiper.slideTo(0, swiper.params.speed, true, true);
+                    emit("autoplay");
+                } else stop();
+                if (swiper.params.cssMode && swiper.autoplay.running) run(); else if (false === autoplayResult) run();
+            }), delay);
+        }
+        function start() {
+            if ("undefined" !== typeof timeout) return false;
+            if (swiper.autoplay.running) return false;
+            swiper.autoplay.running = true;
+            emit("autoplayStart");
+            run();
+            return true;
+        }
+        function stop() {
+            if (!swiper.autoplay.running) return false;
+            if ("undefined" === typeof timeout) return false;
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = void 0;
+            }
+            swiper.autoplay.running = false;
+            emit("autoplayStop");
+            return true;
+        }
+        function pause(speed) {
+            if (!swiper.autoplay.running) return;
+            if (swiper.autoplay.paused) return;
+            if (timeout) clearTimeout(timeout);
+            swiper.autoplay.paused = true;
+            if (0 === speed || !swiper.params.autoplay.waitForTransition) {
+                swiper.autoplay.paused = false;
+                run();
+            } else [ "transitionend", "webkitTransitionEnd" ].forEach((event => {
+                swiper.$wrapperEl[0].addEventListener(event, onTransitionEnd);
+            }));
+        }
+        function onVisibilityChange() {
+            const document = ssr_window_esm_getDocument();
+            if ("hidden" === document.visibilityState && swiper.autoplay.running) pause();
+            if ("visible" === document.visibilityState && swiper.autoplay.paused) {
+                run();
+                swiper.autoplay.paused = false;
+            }
+        }
+        function onTransitionEnd(e) {
+            if (!swiper || swiper.destroyed || !swiper.$wrapperEl) return;
+            if (e.target !== swiper.$wrapperEl[0]) return;
+            [ "transitionend", "webkitTransitionEnd" ].forEach((event => {
+                swiper.$wrapperEl[0].removeEventListener(event, onTransitionEnd);
+            }));
+            swiper.autoplay.paused = false;
+            if (!swiper.autoplay.running) stop(); else run();
+        }
+        function onMouseEnter() {
+            if (swiper.params.autoplay.disableOnInteraction) stop(); else {
+                emit("autoplayPause");
+                pause();
+            }
+            [ "transitionend", "webkitTransitionEnd" ].forEach((event => {
+                swiper.$wrapperEl[0].removeEventListener(event, onTransitionEnd);
+            }));
+        }
+        function onMouseLeave() {
+            if (swiper.params.autoplay.disableOnInteraction) return;
+            swiper.autoplay.paused = false;
+            emit("autoplayResume");
+            run();
+        }
+        function attachMouseEvents() {
+            if (swiper.params.autoplay.pauseOnMouseEnter) {
+                swiper.$el.on("mouseenter", onMouseEnter);
+                swiper.$el.on("mouseleave", onMouseLeave);
+            }
+        }
+        function detachMouseEvents() {
+            swiper.$el.off("mouseenter", onMouseEnter);
+            swiper.$el.off("mouseleave", onMouseLeave);
+        }
+        on("init", (() => {
+            if (swiper.params.autoplay.enabled) {
+                start();
+                const document = ssr_window_esm_getDocument();
+                document.addEventListener("visibilitychange", onVisibilityChange);
+                attachMouseEvents();
+            }
+        }));
+        on("beforeTransitionStart", ((_s, speed, internal) => {
+            if (swiper.autoplay.running) if (internal || !swiper.params.autoplay.disableOnInteraction) swiper.autoplay.pause(speed); else stop();
+        }));
+        on("sliderFirstMove", (() => {
+            if (swiper.autoplay.running) if (swiper.params.autoplay.disableOnInteraction) stop(); else pause();
+        }));
+        on("touchEnd", (() => {
+            if (swiper.params.cssMode && swiper.autoplay.paused && !swiper.params.autoplay.disableOnInteraction) run();
+        }));
+        on("destroy", (() => {
+            detachMouseEvents();
+            if (swiper.autoplay.running) stop();
+            const document = ssr_window_esm_getDocument();
+            document.removeEventListener("visibilitychange", onVisibilityChange);
+        }));
+        Object.assign(swiper.autoplay, {
+            pause,
+            run,
+            start,
+            stop
+        });
+    }
     function initSliders() {
         if (document.querySelector(".swiper")) new core(".swiper", {
-            modules: [ Navigation ],
+            modules: [ Navigation, Scrollbar, Autoplay ],
             observer: true,
             observeParents: true,
             slidesPerView: 5,
             spaceBetween: 0,
             autoHeight: true,
             speed: 800,
+            effect: "fade",
+            autoplay: {
+                delay: 3e3,
+                disableOnInteraction: false
+            },
             scrollbar: {
                 el: ".swiper-scrollbar",
                 draggable: true
+            },
+            on: {}
+        });
+        if (document.querySelector(".swiper-product")) new core(".swiper-product", {
+            modules: [ Navigation, Scrollbar, Autoplay ],
+            observer: true,
+            observeParents: true,
+            slidesPerView: 1,
+            spaceBetween: 0,
+            speed: 800,
+            effect: "fade",
+            autoplay: {
+                delay: 3e3,
+                disableOnInteraction: false
+            },
+            scrollbar: {
+                el: ".swiper-scrollbar",
+                draggable: false
             },
             navigation: {
                 prevEl: ".swiper-button-prev",

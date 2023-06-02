@@ -19,6 +19,16 @@ namespace Marketplace.Domain.ViewModels.Account
         [MinLength(6, ErrorMessage = "Пароль повинен мати довжину більше 6 символів")]
         public string Password { get; set; }
 
+        [Display(Name = "Адреса електронної пошти")]
+        [Required(ErrorMessage = "Адреса електронної пошти є обов'язковою")]
+        [EmailAddress(ErrorMessage = "Неправильна адреса електронної пошти")]
+        public string Email { get; set; }
+
+        [Display(Name = "Телефон")]
+        [Required(ErrorMessage = "Номер телефону є обов'язковим")]
+        [Phone(ErrorMessage = "Неправельний номер телефону")]
+        public string PhoneNumber { get; set; }
+
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Підтвердіть пароль")]
         [Compare("Password", ErrorMessage = "Паролі не збігаються")]

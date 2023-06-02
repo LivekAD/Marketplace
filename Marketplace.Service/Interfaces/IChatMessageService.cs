@@ -15,7 +15,9 @@ namespace Marketplace.Service.Interfaces
     {
         //Task<IBaseResponse<ChatMessage>> AddMessage(string chatId, string senderId, string receiverId, string message);
 
-        Task<IBaseResponse<ChatMessage>> GetOrCreateChat(string productId, string user1, string user2, string message);
+        Task<IBaseResponse<ChatMessage>> CreateChat(string productId, string user1, string user2);
+
+        Task<IBaseResponse<ChatMessage>> SendMessage(string productId, string user1, string user2, string message, string GroupName);
 
         Task<IBaseResponse<List<ChatMessage>>> GetMessages(string productId, string user1, string user2);
 

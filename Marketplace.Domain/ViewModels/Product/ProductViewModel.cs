@@ -51,5 +51,8 @@ namespace Marketplace.Domain.ViewModels.Product
         
         public List<ChatMessage>? ChatMessages { get; set; }
 
-    }
+        public Marketplace.Domain.Entity.User User { get; set; }
+
+		public List<Marketplace.Domain.Entity.Product>? Products { get; set; }
+	}
 }

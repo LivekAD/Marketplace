@@ -56,7 +56,7 @@ namespace Marketplace.Service.Implementations
                 {
                     Name = model.Name,
                     Role = Enum.Parse<Role>(model.Role),
-                    Password = HashPasswordHelper.HashPassowrd(model.Password),
+                    Password = HashPasswordHelper.HashPassowrd(model.Password),                    
                 };
 
                 await _userRepository.Create(user);

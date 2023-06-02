@@ -57,7 +57,10 @@ namespace Marketplace.Service.Implementations
                     Name = model.Name,
                     Role = Role.User,
                     Password = HashPasswordHelper.HashPassowrd(model.Password),
-                };
+                    Email = model.Email,
+                    PhoneNumber = model.PhoneNumber,
+					DateCreate = DateTime.Now
+				};
 
                 await _userRepository.Create(user);
 

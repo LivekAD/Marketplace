@@ -67,6 +67,8 @@ namespace Marketplace.Controllers
 
         public IActionResult Compare() => PartialView();
 
+        #region Save Product
+
         [HttpGet]
         public async Task<IActionResult> Save(int id)
         {
@@ -113,40 +115,9 @@ namespace Marketplace.Controllers
             return RedirectToAction("GetProducts");
         }
 
-        /*[HttpGet]
-        public async Task<IActionResult> SaveAuction()
-        {
-            return PartialView();
-        }
+        #endregion
 
-        [HttpPost]
-        public async Task<IActionResult> SaveAuction(ProductViewModel viewModel)
-        {
-            ModelState.Remove("Id");
-            ModelState.Remove("DateCreate");
-            if (ModelState.IsValid)
-            {
-                if (viewModel.Id == 0)
-                {
-                    List<ProductPhoto> photos = new List<ProductPhoto>();
-                    foreach (var photo in viewModel.Photo)
-                    {
-                        using (var binaryReader = new BinaryReader(photo.OpenReadStream()))
-                        {
-                            byte[] imageData = binaryReader.ReadBytes((int)photo.Length);
-                            photos.Add(new ProductPhoto { ImageData = imageData });
-                        }
-                    }
-                    await _productService.Create(viewModel, photos, User.Identity.Name);
-                }
-                else
-                {
-                    await _productService.Edit(viewModel.Id, viewModel);
-                }
-            }
-            return RedirectToAction("GetProducts");
-        }*/
-
+        #region Get Product
 
         [HttpGet]
         public async Task<ActionResult> GetProduct(int id, bool isJson)
@@ -158,7 +129,7 @@ namespace Marketplace.Controllers
 
 				if (messages.Data == null)
 				{
-					await _chatMessageService.GetOrCreateChat(id.ToString(), User.Identity.Name, response.Data.OwnerName, null);
+					await _chatMessageService.CreateChat(id.ToString(), User.Identity.Name, response.Data.OwnerName);
 					messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
 				}
 
@@ -179,6 +150,10 @@ namespace Marketplace.Controllers
             return Json(response.Data);
         }
 
+        #endregion
+
+        #region Get Auction
+
         [HttpGet]
         public async Task<ActionResult> GetAuctionProduct(int id, bool isJson)
         {
@@ -195,20 +170,6 @@ namespace Marketplace.Controllers
         {
             var response = await _productService.GetProduct(term);
             return Json(response.Data);
-        }
-
-        [HttpGet]
-        public JsonResult GetCategory()
-        {
-            var types = _productService.GetCategory();
-            return Json(types.Data);
-        }
-
-        [HttpPost]
-        public JsonResult GetSubCategory()
-        {
-            var types = _productService.GetSubCategory();
-            return Json(types.Data);
         }
 
         [HttpPost]
@@ -228,7 +189,53 @@ namespace Marketplace.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, new { modelError.FirstOrDefault().ErrorMessage });
         }
 
-		/*[HttpPost]
+        #endregion
+
+        #region Category/SubCategory
+
+        [HttpGet]
+        public JsonResult GetCategory()
+        {
+            var types = _productService.GetCategory();
+            return Json(types.Data);
+        }
+
+        [HttpPost]
+        public JsonResult GetSubCategory()
+        {
+            var types = _productService.GetSubCategory();
+            return Json(types.Data);
+        }
+
+        [HttpGet]
+        public IActionResult GetProductsByCategory(string category)
+        {
+            var response = _productService.GetProductsByCategory(category);
+
+            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+            {
+                return View("GetProducts", response.Data);
+            }
+
+            return View("Error", $"{response.Description}");
+
+        }
+
+        [HttpPost]
+        public JsonResult GetSubcategories(int categoryId)
+        {
+            var subcategories = Enum.GetValues(typeof(SubCategory))
+                .Cast<SubCategory>()
+                .Where(s => (((int)s - 4000) / 10) == categoryId)
+                .Select(s => new { Id = (int)s, Name = s.GetDisplayName() })
+                .ToList();
+
+            return Json(subcategories);
+        }
+
+        #endregion
+
+        /*[HttpPost]
         public async Task<IActionResult> Chat(int id)
         {
             var response = await _productService.GetProduct(id);
@@ -249,30 +256,6 @@ namespace Marketplace.Controllers
             return RedirectToAction("GetProducts", "Product");           
         }*/
 
-		[HttpGet]
-		public IActionResult GetProductsByCategory(string category)
-		{
-			var response = _productService.GetProductsByCategory(category);
-
-			if (response.StatusCode == Domain.Enum.StatusCode.OK)
-			{
-			    return View("GetProducts", response.Data);
-			}
-
-			return View("Error", $"{response.Description}");
-
-		}
-
-        [HttpPost]
-        public JsonResult GetSubcategories(int categoryId)
-        {
-            var subcategories = Enum.GetValues(typeof(SubCategory))
-                .Cast<SubCategory>()
-                .Where(s => (((int)s - 4000) / 10) == categoryId)
-                .Select(s => new { Id = (int)s, Name = s.GetDisplayName() })
-                .ToList();
-
-            return Json(subcategories);
-        }
+        
     }
 }

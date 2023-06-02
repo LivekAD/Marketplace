@@ -21,7 +21,7 @@ namespace Marketplace.Domain.ViewModels.User
         [Display(Name = "Логін")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Вкажіть пароль")]
+		[Required(ErrorMessage = "Вкажіть пароль")]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
     }

@@ -21,19 +21,17 @@ namespace Marketplace.Hubs
             _userService = userService;
         }
 
-		public async Task JoinChat(string chatId)
+		/*public async Task JoinChat(string chatId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, chatId);
-        }
+        }*/
 
-		public async Task SendMessage(int productId, string user1, string user2, string message)
+		public async Task SendMessage(int productId, string GroupName, string user1, string user2, string message)
         {
-            var user1Id = _userService.GetUser(user1);
-            var user2Id = _userService.GetUser(user2);
-            var chat = await _messageService.GetOrCreateChat(productId.ToString(), user1, user2, message);
-            var chatId = _messageService.GetGroupName(productId.ToString(), user1Id.Result.Data.Id.ToString(), user2Id.Result.Data.Id.ToString());
-
-            await Clients.Group(chatId).SendAsync("ReceiveMessage", chat);
+            var chat = await _messageService.SendMessage(productId.ToString(), user1, user2, message, GroupName);
+            //var chatId = _messageService.GetGroupName(productId.ToString(), user1Id.Result.Data.Id.ToString(), user2Id.Result.Data.Id.ToString());
+            await Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
+            await Clients.Group(GroupName).SendAsync("ReceiveMessage", message);
         }
 
     }
