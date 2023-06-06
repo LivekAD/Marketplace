@@ -52,7 +52,7 @@
 				</div>
 				<div class="photo-block__contact">
 					<a href="#" data-phone-number="@Model.User.PhoneNumber" id="ph">Телефон</a>
-					<a href="">Повідомлення</a>
+					<a asp-controller="Chat" asp-action="Index">Повідомлення</a>
 				</div>
 				<div class="photo-block__all-products">
 					<a href="">Усі оголошення автора</a>
@@ -97,7 +97,7 @@
 				<span>Усі оголошення автора</span>
 			</div>
 			<div class="product-block__product product">
-				<div class="product__slider swiper">
+				<div class="product__slider swiper" data-sex="@Model.Name">
 					<div class="product__wrapper swiper-wrapper">
 						@if (Model.Products.Count >= 10)
 						{
@@ -222,7 +222,7 @@
 		var originalText = link.innerText;
 
 		// Отримуємо номер телефону
-		const phoneNumber = link.getAttribute('data-phone-number');;
+		const phoneNumber = link.getAttribute('data-phone-number');
 
 		// Додаємо обробник події для натискання на посилання
 		link.addEventListener('click', function (event) {

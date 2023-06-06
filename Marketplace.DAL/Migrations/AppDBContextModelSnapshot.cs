@@ -220,7 +220,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5048),
+                            DateCreate = new DateTime(2023, 6, 5, 13, 26, 38, 359, DateTimeKind.Local).AddTicks(9276),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             OwnerName = "Admin",
@@ -231,7 +231,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5084),
+                            DateCreate = new DateTime(2023, 6, 5, 13, 26, 38, 359, DateTimeKind.Local).AddTicks(9316),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
                             OwnerName = "Admin",
@@ -242,7 +242,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 6, 2, 12, 36, 35, 272, DateTimeKind.Local).AddTicks(5087),
+                            DateCreate = new DateTime(2023, 6, 5, 13, 26, 38, 359, DateTimeKind.Local).AddTicks(9319),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
                             OwnerName = "Admin",

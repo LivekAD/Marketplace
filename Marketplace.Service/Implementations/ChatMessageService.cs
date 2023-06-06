@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,11 +33,13 @@ namespace Marketplace.Service.Implementations
             _productRepository = productRepository;
             _userRepository = userRepository;
             _chatMessageRepository = chatMessageRepository;
-        }        
+        }
 
-        #endregion
+		#endregion
 
-        public async Task<IBaseResponse<ChatMessage>> CreateChat(string productId, string user1, string user2)
+
+		#region Create Chat
+		public async Task<IBaseResponse<ChatMessage>> CreateChat(string productId, string user1, string user2)
         {
             try
             {
@@ -73,32 +76,60 @@ namespace Marketplace.Service.Implementations
             }
         }
 
-        public async Task<IBaseResponse<ChatMessage>> SendMessage(string productId, string user1, string user2, string message, string GroupName)
-        {
-            try
+		#endregion
+
+		#region Send Message
+		public async Task<IBaseResponse<ChatMessage>> SendMessage(string productId, string sender, string message, string GroupName)
+		{
+			try
             {
-                var user1Id = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == user1);
-                var user2Id = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == user2);
-
-                var chat = new ChatMessage
+				var groupId = SplitString(GroupName);
+				var userId = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Id == groupId[2]);
+                var resUserId = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Id == groupId[1]);
+				var senderId = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == sender);
+                
+                if(senderId.Id != userId.Id)
                 {
-                    ProductId = productId,
-                    User1Id = user1Id.Id.ToString(),
-                    User1Name = user1,
-                    User2Id = user2Id.Id.ToString(),
-                    User2Name = user2,
-                    Message = message,
-                    Timestamp = DateTime.Now,
-                    GroupName = GroupName,
-                };
+					var chat = new ChatMessage
+					{
+						ProductId = productId,
+						User1Id = senderId.Id.ToString(),
+						User1Name = sender,
+						User2Id = userId.Id.ToString(),
+						User2Name = userId.Name,
+						Message = message,
+						Timestamp = DateTime.Now,
+						GroupName = GroupName,
+					};
+					await _chatMessageRepository.Create(chat);
 
-                await _chatMessageRepository.Create(chat);
-
-                return new BaseResponse<ChatMessage>()
+					return new BaseResponse<ChatMessage>()
+					{
+						StatusCode = StatusCode.OK,
+						Data = chat
+					};
+				}
+                else
                 {
-                    StatusCode = StatusCode.OK,
-                    Data = chat
-                };
+					var chat = new ChatMessage
+					{
+						ProductId = productId,
+						User1Id = senderId.Id.ToString(),
+						User1Name = sender,
+						User2Id = resUserId.Id.ToString(),
+						User2Name = resUserId.Name,
+						Message = message,
+						Timestamp = DateTime.Now,
+						GroupName = GroupName,
+					};
+					await _chatMessageRepository.Create(chat);
+
+					return new BaseResponse<ChatMessage>()
+					{
+						StatusCode = StatusCode.OK,
+						Data = chat
+					};
+				}
             }
             catch (Exception ex)
             {
@@ -110,7 +141,11 @@ namespace Marketplace.Service.Implementations
             }
         }
 
-        public async Task<IBaseResponse<List<ChatMessage>>> GetMessages(string productId, string user1, string user2)
+		#endregion
+
+		#region Get Message
+
+		public async Task<IBaseResponse<List<ChatMessage>>> GetMessages(string productId, string user1, string user2)
         {
             try
             {
@@ -150,11 +185,56 @@ namespace Marketplace.Service.Implementations
                 };
             }
         }
+		#endregion
 
-        public string GetGroupName(string productId, string user1Id, string user2Id)
+		public string GetGroupName(string productId, string user1Id, string user2Id)
         {
             return $"{productId}-{user1Id}-{user2Id}";
         }
 
-    }
+        static long[] SplitString(string input)
+        {
+            string[] parts = input.Split('-');
+            long[] numbers = new long[parts.Length];
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                numbers[i] = long.Parse(parts[i]);
+            }
+
+            return numbers;
+        }
+
+        #region Get Chats
+
+        public async Task<IBaseResponse<List<ChatMessage>>> GetChats(string user)
+		{
+			try
+			{
+				var userId = await _userRepository.GetAll().FirstOrDefaultAsync(x => x.Name == user);
+                var chats = _chatMessageRepository.GetAll().Where(c => c.User1Id == userId.Id.ToString() || c.User2Id == userId.Id.ToString()).ToList();
+                //var product = await _productRepository.GetAll().FirstOrDefaultAsync();
+
+				return new BaseResponse<List<ChatMessage>>()
+				{
+					Data = chats,
+					StatusCode = StatusCode.OK
+				};
+			}
+			catch (Exception ex)
+			{
+				return new BaseResponse<List<ChatMessage>>()
+				{
+					StatusCode = StatusCode.InternalServerError,
+					Description = $"Внутренняя ошибка: {ex.Message}"
+				};
+			}
+		}
+
+		#endregion
+	}
+
+	
+
+
 }

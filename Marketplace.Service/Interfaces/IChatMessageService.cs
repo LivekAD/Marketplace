@@ -17,11 +17,13 @@ namespace Marketplace.Service.Interfaces
 
         Task<IBaseResponse<ChatMessage>> CreateChat(string productId, string user1, string user2);
 
-        Task<IBaseResponse<ChatMessage>> SendMessage(string productId, string user1, string user2, string message, string GroupName);
+        Task<IBaseResponse<ChatMessage>> SendMessage(string productId, string sender, string message, string GroupName);
 
         Task<IBaseResponse<List<ChatMessage>>> GetMessages(string productId, string user1, string user2);
 
-        string GetGroupName(string productId, string user1Id, string user2Id);
+		Task<IBaseResponse<List<ChatMessage>>> GetChats(string user);
+
+		string GetGroupName(string productId, string user1Id, string user2Id);
 
     }
 }

@@ -123,7 +123,7 @@ namespace Marketplace.Controllers
         public async Task<ActionResult> GetProduct(int id, bool isJson)
         {
             var response = await _productService.GetProduct(id);
-            if (User.Identity.Name != null)
+            if (User.Identity.Name != null && response.Data.OwnerName != User.Identity.Name)
             {
 				var messages = await _chatMessageService.GetMessages(id.ToString(), User.Identity.Name, response.Data.OwnerName);
 

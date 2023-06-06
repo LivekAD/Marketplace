@@ -13,5 +13,7 @@ namespace Marketplace.Domain.ViewModels.Chat
 
         public List<ChatMessage> Chats { get; set; }
 
+        public List<Marketplace.Domain.Entity.Product> Products { get; set; }
+
     }
 }
