@@ -5,37 +5,18 @@
     ViewBag.Title = "Вход в аккаунт";
 }
 
-<div style="padding: 40px;"></div>
 
-<div class="container py-5">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <span class="anchor"></span>
-                    <div class="card card-account card-outline-secondary border border-white">
-                        <div class="card-header">
-                            <h3 class="mb-0 text-center ParagraphHome">Вход в аккаунт</h3>
-                        </div>
-                        <div class="card-body">
-                            <form autocomplete="on" method="post" asp-controller="Account" asp-action="Login">
-                                <div asp-validation-summary="All" style="font-size:23px; font-family:Impact" class="text-danger text-center"></div>
-                                <div class="form-group">
-                                    <input asp-for="Name" placeholder="Логин" class="form-control textbox-dg font-weight-bold text-center" type="text">
-                                    <div class="form-text">Длина логина должна быть от 3 до 20 символов.</div>
-                                </div>
-                                <div class="form-group">
-                                    <input autocomplete="new-password" asp-for="Password" placeholder="Пароль" class="form-control textbox-dg font-weight-bold text-center" type="password">
-                                </div>
-                                <div class="d-grid gap-2 d-md-block float-right">
-                                    <a asp-controller="Account" asp-action="Register" class="btn btn-primary" type="button">Регистрация</a>
-                                    <button class="btn btn-success">Отправить</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+<section class="page__login login-block">
+    <div class="login-block__container">
+        <div class="login-block__content">
+            <form autocomplete="on" method="post" class="login-block__login" asp-controller="Account" asp-action="Login">
+                <div class="login__head">
+                    <h2>Вхід</h2>
                 </div>
-            </div>
+                <input type="text" class="login__login" placeholder="Логін" asp-for="Name">
+                <input type="password" class="login__password" placeholder="Пароль" autocomplete="new-password" asp-for="Password"><br>
+                <button type="submit" class="button">Увійти</button>
+            </form>
         </div>
     </div>
-</div>
+</section>

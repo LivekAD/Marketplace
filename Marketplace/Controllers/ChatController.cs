@@ -1,7 +1,9 @@
-﻿using Marketplace.Domain.Entity;
+﻿using Azure;
+using Marketplace.Domain.Entity;
 using Marketplace.Domain.ViewModels.Chat;
 using Marketplace.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Helpers;
 
 namespace Marketplace.Controllers
 {
@@ -57,6 +59,27 @@ namespace Marketplace.Controllers
 			}
 
 			return View("Error", $"{chats.Description}");
+		}
+
+		[HttpGet]
+
+		public async Task<IActionResult> Chat(int productId)
+		{
+			var response = await _productService.GetProduct(productId);
+			if (User.Identity.Name != null && response.Data.OwnerName != User.Identity.Name)
+			{
+				var messages = await _chatMessageService.GetMessages(productId.ToString(), User.Identity.Name, response.Data.OwnerName);
+
+				if (messages.Data == null)
+				{
+					await _chatMessageService.CreateChat(productId.ToString(), User.Identity.Name, response.Data.OwnerName);
+					messages = await _chatMessageService.GetMessages(productId.ToString(), User.Identity.Name, response.Data.OwnerName);
+				}
+
+				response.Data.ChatMessages = messages.Data;
+			}
+
+			return PartialView("Chat", response.Data);
 		}
 	}
 }

@@ -5,50 +5,23 @@
     ViewBag.Title = "Регистрация";
 }
 
-<div style="padding: 20px;"></div>
-
-<div class="container py-5">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <span class="anchor"></span>
-                    <div class="card card-account card-outline-secondary border border-white">
-                        <div class="card-header">
-                            <h3 class="mb-0 text-center paragraphHome text-black">Регистрация</h3>
-                        </div>
-                        <div class="card-body">
-                            <form asp-controller="Account" asp-action="Register">
-                                <div asp-validation-summary="All" style="font-size:23px; font-family:Impact" class="text-danger text-center"></div>
-                                <div class="form-group">
-                                    <input asp-for="Name" class="form-control textbox-dg font-weight-bold text-center" placeholder="Имя" type="text">
-                                </div>
-                                <div class="form-group">
-                                    <input asp-for="Email" class="form-control textbox-dg font-weight-bold text-center" placeholder="Email" type="email">
-                                </div>
-                                <div class="form-group">
-                                    <input asp-for="PhoneNumber" class="form-control textbox-dg font-weight-bold text-center" placeholder="Phone" type="tel">
-                                </div>
-                                <div class="form-group">
-                                    <input autocomplete="new-password" asp-for="Password" placeholder="Пароль" class="form-control textbox-dg font-weight-bold text-center" type="password">
-                                </div>
-                                <span class="text-black" style="font-size: small; font-family:'Comic Sans MS'">Пароль повинен бути завдовжки більше 6 символів і мати тільки латинські символи</span>
-                                <div class="form-group">
-                                    <input autocomplete="new-password" asp-for="PasswordConfirm" placeholder="Підтвердіть пароль" class="form-control textbox-dg font-weight-bold text-center" type="password">
-                                </div>
-                                <div>
-                                    <h2 class="paragraphHome text-center"><a asp-controller="Account" target="_blank" asp-action="Login" style="color:deepskyblue;">Вхід</a></h2>
-                                </div>
-                                <button class="btn btn-success btn-lg float-right" type="submit">Отправить</button>
-                            </form>
-                        </div>
-                    </div>
+<section class="page__login login-block">
+    <div class="login-block__container">
+        <div class="login-block__content">
+            <form class="login-block__login" asp-controller="Account" asp-action="Register">
+                <div class="login__head">
+                    <h2>Реєстрація</h2>
                 </div>
-            </div>
+                <input type="text" class="login__login" placeholder="Логін" asp-for="Name">
+                <input type="email" class="login__center" placeholder="Email" asp-for="Email">
+                <input type="tel" class="login__center" placeholder="Телефон" asp-for="PhoneNumber">
+                <input type="password" class="login__center" placeholder="Пароль" asp-for="Password"><br>
+                <input type="password" class="login__password" placeholder="Підтвердіть пароль" asp-for="PasswordConfirm">
+                <button type="submit" class="button">Зареєструватись</button>
+            </form>
         </div>
     </div>
-</div>
-
+</section>
 
 @section pageScripts {
 

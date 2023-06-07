@@ -52,7 +52,15 @@
 				</div>
 				<div class="photo-block__contact">
 					<a href="#" data-phone-number="@Model.User.PhoneNumber" id="ph">Телефон</a>
-					<a asp-controller="Chat" asp-action="Index">Повідомлення</a>
+					@if (!User.Identity.IsAuthenticated)
+					{
+						<a asp-controller="Chat" asp-action="Chat" asp-route-productId="@Model.Id">Повідомлення</a>
+					}
+					else
+					{
+						<a asp-controller="Account" asp-action="Login">Повідомлення</a>
+					}
+
 				</div>
 				<div class="photo-block__all-products">
 					<a href="">Усі оголошення автора</a>
