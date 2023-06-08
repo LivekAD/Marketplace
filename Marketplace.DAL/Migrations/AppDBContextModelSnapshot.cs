@@ -17,7 +17,7 @@ namespace Marketplace.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.3")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -220,7 +220,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 1L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 6, 5, 13, 26, 38, 359, DateTimeKind.Local).AddTicks(9276),
+                            DateCreate = new DateTime(2023, 6, 7, 18, 38, 56, 801, DateTimeKind.Local).AddTicks(8698),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Apple Air Pods",
                             OwnerName = "Admin",
@@ -231,7 +231,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 2L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 6, 5, 13, 26, 38, 359, DateTimeKind.Local).AddTicks(9316),
+                            DateCreate = new DateTime(2023, 6, 7, 18, 38, 56, 801, DateTimeKind.Local).AddTicks(8735),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Pods",
                             OwnerName = "Admin",
@@ -242,7 +242,7 @@ namespace Marketplace.DAL.Migrations
                         {
                             Id = 3L,
                             Category = 31,
-                            DateCreate = new DateTime(2023, 6, 5, 13, 26, 38, 359, DateTimeKind.Local).AddTicks(9319),
+                            DateCreate = new DateTime(2023, 6, 7, 18, 38, 56, 801, DateTimeKind.Local).AddTicks(8738),
                             Description = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                             Name = "Air",
                             OwnerName = "Admin",

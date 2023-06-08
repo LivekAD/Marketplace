@@ -22,5 +22,7 @@ namespace Marketplace.Domain.ViewModels.Profile
 
         [Required(ErrorMessage = "Укажите имя")]
         public string UserName { get; set; }
+
+		public List<Marketplace.Domain.Entity.Product>? Products { get; set; }
     }
 }

@@ -11,8 +11,12 @@ using Microsoft.AspNet.SignalR.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using X.PagedList;
+using Baroque.NovaPoshta.Client;
+
 
 namespace Marketplace.Controllers
 {
@@ -33,26 +37,48 @@ namespace Marketplace.Controllers
 
         #endregion
 
-        [HttpGet]
-        public IActionResult GetProducts(string searchString)
-        {
+        #region GetProducts
+
+        [HttpGet("GetProducts")]
+        public IActionResult GetProducts(string searchString, int? page)
+        {            
             var response = _productService.GetProducts();
+            int pageSize = 10; // Кількість продуктів на одній сторінці
+            int pageNumber = (page ?? 1);
 
             if (response.StatusCode == Domain.Enum.StatusCode.OK)
             {
                 if (String.IsNullOrEmpty(searchString))
-                {
-                    return View(response.Data);
+                {                    
+                    return View(response.Data.ToList().ToPagedList(pageNumber, pageSize));
                 }
                 else
-                {
-                    return View(response.Data.Where(s => s.Name!.ToLower().Contains(searchString.ToLower())).ToList());
+                {                    
+                    return View(response.Data.Where(s => s.Name!.ToLower().Contains(searchString.ToLower())).ToList().ToPagedList(pageNumber, pageSize));
                 }
             }
 
             return View("Error", $"{response.Description}");
 
         }
+
+        [HttpGet("GetAuthorProducts")]
+        public IActionResult GetAuthorProducts(string owner, int? page)
+		{
+			var response = _productService.GetProducts();
+			int pageSize = 10; // Кількість продуктів на одній сторінці
+			int pageNumber = (page ?? 1);
+
+			if (response.StatusCode == Domain.Enum.StatusCode.OK)
+			{
+				return View("GetProducts", response.Data.Where(s => s.OwnerName == owner).ToList().ToPagedList(pageNumber, pageSize));				
+			}
+
+			return View("Error", $"{response.Description}");
+
+		}
+
+        #endregion
 
         [Authorize]
         public async Task<IActionResult> Delete(int id)
@@ -64,8 +90,6 @@ namespace Marketplace.Controllers
             }
             return View("Error", $"{response.Description}");
         }
-
-        public IActionResult Compare() => PartialView();
 
         #region Save Product
 
@@ -208,13 +232,15 @@ namespace Marketplace.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetProductsByCategory(string category)
+        public IActionResult GetProductsByCategory(string category, int? page)
         {
             var response = _productService.GetProductsByCategory(category);
+			int pageSize = 10; // Кількість продуктів на одній сторінці
+			int pageNumber = (page ?? 1);                      
 
-            if (response.StatusCode == Domain.Enum.StatusCode.OK)
+			if (response.StatusCode == Domain.Enum.StatusCode.OK && response.Data != null)
             {
-                return View("GetProducts", response.Data);
+                return View("GetProducts", response.Data.ToList().ToPagedList(pageNumber, pageSize));
             }
 
             return View("Error", $"{response.Description}");
@@ -234,28 +260,6 @@ namespace Marketplace.Controllers
         }
 
         #endregion
-
-        /*[HttpPost]
-        public async Task<IActionResult> Chat(int id)
-        {
-            var response = await _productService.GetProduct(id);
-            var user1 = await _userService.GetUser(User.Identity.Name);
-            var user2 = await _userService.GetUser(response.Data.OwnerName);
-            var messages = await _chatMessageService.GetMessages(id.ToString(), user1.Data.Id.ToString(), user2.Data.Id.ToString());
-
-            if(messages.Data == null)
-            {
-                await _chatMessageService.GetOrCreateChat(id.ToString(), user1.Data.Id.ToString(), user2.Data.Id.ToString(), null);
-                messages = await _chatMessageService.GetMessages(id.ToString(), user1.Data.Id.ToString(), user2.Data.Id.ToString());
-            }            
-
-            if (messages.StatusCode == Domain.Enum.StatusCode.OK)
-            {
-                return Json(messages.Data);
-            }
-            return RedirectToAction("GetProducts", "Product");           
-        }*/
-
         
     }
 }

@@ -21,12 +21,14 @@ namespace Marketplace.Service.Implementations
 
         private readonly ILogger<ProfileService> _logger;
         private readonly IBaseRepository<Profile> _profileRepository;
+		private readonly IBaseRepository<Product> _productRepository;
 
-        public ProfileService(IBaseRepository<Profile> profileRepository,
-            ILogger<ProfileService> logger)
+		public ProfileService(IBaseRepository<Profile> profileRepository,
+            ILogger<ProfileService> logger, IBaseRepository<Product> productRepository)
         {
             _profileRepository = profileRepository;
             _logger = logger;
+            _productRepository = productRepository;
         }
 
         #endregion
@@ -37,14 +39,16 @@ namespace Marketplace.Service.Implementations
         {
             try
             {
-                var profile = await _profileRepository.GetAll()
+                var response = _productRepository.GetAll().Where(s => s.OwnerName == userName).ToList();
+				var profile = await _profileRepository.GetAll()
                     .Select(x => new ProfileViewModel()
                     {
                         Id = x.Id,
                         Address = x.Address,
                         Age = x.Age,
-                        UserName = x.User.Name
-                    })
+                        UserName = x.User.Name,
+                        Products = response
+					})
                     .FirstOrDefaultAsync(x => x.UserName == userName);
 
                 return new BaseResponse<ProfileViewModel>()

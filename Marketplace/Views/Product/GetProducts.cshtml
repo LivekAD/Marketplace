@@ -1,4 +1,6 @@
-﻿@model List<Product>
+﻿@model IPagedList<Product>
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
 
 @{
     ViewBag.Title = "Список товарів";
@@ -28,94 +30,88 @@
     }
 </style>
 
-<div class="card col-md-12" style="margin: 10px;">
-    <div class="card-buttons-group">
-        @*<button class='btn btn-primary' id='compareBtnId'>Сравнение</button>*@
-        @if (User.Identity.IsAuthenticated)
-        {            
-            <a asp-controller="Product" asp-action="Save" class="btn btn-danger">Добавить</a>
-            <a asp-controller="Product" asp-action="SaveAuction" class="btn btn-danger">Добавить Auction</a>
-        }
-    </div>
-</div>
-
-<div style="padding: 10px;"></div>
 @if (Model == null)
 {
-    <div class="card col-md-12">
-        <div class="row g-0">
-            <div class="col-md-4">
-                <img src="~/img/pngegg.png"
-                     class="img-fluid rounded-start rounded">
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Список оголошень пустий :(</h5>
-                    <p class="card-text">
-                        Список поповниться пізніше, не засмучуйтеся
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div style="padding: 10px;"></div>
-    <div class="card text-center">
-        <div class="card-header">
-            <ul class="nav nav-pills card-header-pills">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Active</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">Special title treatment</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-    </div>
-}
-else
-{
-    <div class="row">
-        @foreach (var product in Model)
-        {
-            <div class="row row-cols-1 @cardStyle text-center">
-                <div class="col" style="padding: 10px;">
-                    <div class="card">
-                        @*<img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.Photo ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;"/>*@
-                        <div class="card-body">
-                            <h5 class="card-title">Название: @product.Name</h5>
-                            <p class="card-text">Краткое описание: @product.Description.Substring(0, 16) ...</p>
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Стоимость: @product.Price </li>
-                        </ul>
-                        <div class="card-body">
-                            @if(product.isAuction == "true")
-                            {
-                                <a asp-controller="Product" asp-action="GetAuctionProduct" asp-route-id="@product.Id" class="btn btn-danger">Открыть</a>
-                            }
-                            else
-                            {
-                                <a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id" class="btn btn-danger">Открыть</a>
-                            }                            
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <a asp-controller="Product" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger">Удалить</a>
-                                <a asp-controller="Order" asp-action="CreateOrder" asp-route-id="@product.Id" class="btn btn-success">В корзину</a>
-                            }                            
-                        </div>
+    <section class="page__getproducts getproducts-block">
+        <div class="getproducts-block__container">
+            <div class="getproducts-block__content">
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Список оголошень пустий :(</h5>
+                        <p class="card-text">
+                            Список поповниться пізніше, не засмучуйтеся
+                        </p>
                     </div>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="page__getproducts getproducts-block">
+        <div class="getproducts-block__container">
+            <div class="getproducts-block__content">
+                @foreach (var product in Model)
+                {@if (product.isAuction == "true")
+                    {
+                        <a asp-controller="Product" asp-action="GetAuctionProduct" asp-route-id="@product.Id">
+                            <div class="getproducts-block__product-card product-card">
+                                <div class="product-card__image">
+                                    @if (product.MainPhoto != null)
+                                    {
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.MainPhoto ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="https://via.placeholder.com/216x152" />
+                                    }
+                                </div>
+                                <div class="product-card__title">
+                                    <span>@product.Name</span>
+                                </div>
+                                <div class="product-card__date">
+                                    <span>@product.DateCreate.ToString("dd MMMM yyyy")</span>
+                                </div>
+                                <div class="product-card__price">
+                                    <span>@product.Price грн.</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Product" asp-action="GetProduct" asp-route-id="@product.Id">
+                            <div class="getproducts-block__product-card product-card">
+                                <div class="product-card__image">
+                                    @if (product.MainPhoto != null)
+                                    {
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(product?.MainPhoto ?? Array.Empty<byte>())" alt="@product.Name" style="max-width: 120px;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="https://via.placeholder.com/216x152" />
+                                    }
+                                </div>
+                                <div class="product-card__title">
+                                    <span>@product.Name</span>
+                                </div>
+                                <div class="product-card__date">
+                                    <span>@product.DateCreate.ToString("dd MMMM yyyy")</span>
+                                </div>
+                                <div class="product-card__price">
+                                    <span>@product.Price грн.</span>
+                                </div>
+                            </div>
+                        </a>
+                    }
+                }
+                <div class="getproducts-block__pagination pagination-container">
+                    @Html.PagedListPager(Model, page => Url.Action("GetProducts", new { page }) )
+                </div>
+            </div>
+        </div>
+    </section>
 }
 
 @section pageScripts {
